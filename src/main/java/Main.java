@@ -1,10 +1,10 @@
-/*
- * Скрипт для создания плейлистов m3u
- * на основе данных полученных с сайта http://proxytv.ru/
- * Демонстрация создания таких плейлистов путем чтения данных из csv файла
- * и базы mySQL
+п»ї/*
+ * РЎРєСЂРёРїС‚ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїР»РµР№Р»РёСЃС‚РѕРІ m3u
+ * РЅР° РѕСЃРЅРѕРІРµ РґР°РЅРЅС‹С… РїРѕР»СѓС‡РµРЅРЅС‹С… СЃ СЃР°Р№С‚Р° http://proxytv.ru/
+ * Р”РµРјРѕРЅСЃС‚СЂР°С†РёСЏ СЃРѕР·РґР°РЅРёСЏ С‚Р°РєРёС… РїР»РµР№Р»РёСЃС‚РѕРІ РїСѓС‚РµРј С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С… РёР· csv С„Р°Р№Р»Р°
+ * Рё Р±Р°Р·С‹ mySQL
  * 
- * Полный список провайдеров на proxytv.ru :
+ * РџРѕР»РЅС‹Р№ СЃРїРёСЃРѕРє РїСЂРѕРІР°Р№РґРµСЂРѕРІ РЅР° proxytv.ru :
  * Optik Redkom Novotel Lada Zapsib Aist Tauer Elite RostNSK Bes Utelekom Post Lanta Perspektiv Corbina Citilink Yarnet Skaynet Tenet
 */
 
@@ -16,78 +16,78 @@ public class Main {
 
 	public static void main(String[] args) throws Exception{
 
-		final String M3UNAMEFILE1 = "./src/main/resources/plist_Novotel.m3u";//Имя файла плейлиста
-		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//Имя файла плейлиста
-		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//Имя файла плейлиста
+		final String M3UNAMEFILE1 = "./src/main/resources/plist_Novotel.m3u";//РёРјСЏ С„Р°Р№Р»Р° РїР»РµР№Р»РёСЃС‚Р°
+		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//РёРјСЏ С„Р°Р№Р»Р° РїР»РµР№Р»РёСЃС‚Р°
+		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//РёРјСЏ csv С„Р°Р№Р»Р° 
 		final String DRIVERNAME = "./src/main/resources/BrowserDrivers"
-				+ "/Chrome/ChromeDriver 86.0.4240.22/chromedriver.exe";//Путь к ChromeDriver
-		final char DELIMITER = ';'; // разделитель в csv файле
-		final int TIMEOUT = 3*1000;// 3 секунды
-		final int LENDATA = 8192; // Длина буфера для проверки наличия потока
-		final int MAXATTEMPT = 3; // К-во попыток для проверки
+				+ "/Chrome/ChromeDriver 86.0.4240.22/chromedriver.exe";//С•СѓС‚СЊ Рє ChromeDriver
+		final char DELIMITER = ';'; // СЂР°Р·РґРµР»РёС‚РµР»СЊ РІ csv С„Р°Р№Р»Рµ
+		final int TIMEOUT = 3*1000;// 3 СЃРµРєСѓРЅРґС‹
+		final int LENDATA = 8192; // РґР»РёРЅР° Р±СѓС„РµСЂР° РґР»СЏ РїСЂРѕРІРµСЂРєРё РЅР°Р»РёС‡РёВ¤ РїРѕС‚РѕРєР°
+		final int MAXATTEMPT = 3; // В Рє-РІРѕ РїРѕРїС‹С‚РѕРє РґР»СЏ РїСЂРѕРІРµСЂРєРё
 		
 
-        // строка со списком всех провайдеров		
+        // СЃС‚СЂРѕРєР° СЃРѕ СЃРїРёСЃРєРѕРј РІСЃРµС… РїСЂРѕРІР°Р№РґРµСЂРѕРІ		
 		final String allProviders = "Aist,Bes,Elite,Lada,Optik,Lanta,Novotel,"
 				+ "Perspektiv,Post,Redkom,RostNSK,Skaynet,Citilink,Tenet,Tauer,Zapsib,Utelekom,Corbina,Yarnet";
 		
 		
 		  try {
 		  
-			  // список bean куда будем сохранять данные о каналах  
+			  // СЃРїРёСЃРѕРє bean РєСѓРґР° Р±СѓРґРµРј СЃРѕС…СЂР°РЅСЏС‚СЊ РґР°РЅРЅС‹Рµ Рѕ РєР°РЅР°Р»Р°С…  
 			   List<Entry> entries =  new ArrayList<Entry>();
 			  
-			  // конструктор для класса RobotIptv
+			  // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РєР»Р°СЃСЃР° RobotIptv
 			   RobotIptv robotIptv1 = new RobotIptv();
 			  
-			  // Парсим сайт http://proxytv.ru/ и записываем данные о каналах в список bean
+			  // РїР°СЂСЃРёРј СЃР°Р№С‚ http://proxytv.ru/ Рё Р·Р°РїРёСЃС‹РІР°РµРј РґР°РЅРЅС‹Рµ Рѕ РєР°РЅР°Р»Р°С… РІ СЃРїРёСЃРѕРє bean
 			  entries = robotIptv1.getProviderPlist(allProviders, DRIVERNAME);
 			  
 			  
-			  // конструктор класса  SqlBase
+			  // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР°  SqlBase
 			  SqlBase newSqlBase = new SqlBase();		  
 			  
-			  // удаляем все записи в таблице базы // 
+			  // СѓРґР°Р»СЏРµРј РІСЃРµ Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Рµ Р±Р°Р·С‹ // 
 			  newSqlBase.deleteAllPlistsInBase();
 			  
-			  // добавляем данные о каналах в базу 
+			  // РґРѕР±Р°РІР»СЏРµРј РґР°РЅРЅС‹Рµ Рѕ РєР°РЅР°Р»Р°С… РІ Р±Р°Р·Сѓ 
 			  newSqlBase.addPlistToBase(entries);
 			  
-			  // SQL запрос из базы для провайдера Novotel
+			  // SQL Р·Р°РїСЂРѕСЃ РёР· Р±Р°Р·С‹ РґР»СЏ РїСЂРѕРІР°Р№РґРµСЂР° Novotel
 			  String query1 = "SELECT * FROM plists WHERE providerName = 'Novotel' ";
 			  
-			  // получаем данные по SQL запросу
+			  // РїРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ РїРѕ SQL Р·Р°РїСЂРѕСЃСѓ
 			  entries = newSqlBase.readDataFromBase(query1);
 			  
-			  // конструктор для класска CsvFile
+			  // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РєР»Р°СЃСЃРєР° CsvFile
 			  CsvFile newCsvFile = new CsvFile(CSVNAMEFILE, DELIMITER);
 			  
-			  // проверка наличия файла csv. создаем если его нет
+			  // РїСЂРѕРІРµСЂРєР° РЅР°Р»РёС‡РёСЏ С„Р°Р№Р»Р° csv. СЃРѕР·РґР°РµРј РµСЃР»Рё РµРіРѕ РЅРµС‚
 			   newCsvFile.initCsv();
 			  
-			  // пишем данные в csv
+			  // РїРёС€РµРј РґР°РЅРЅС‹Рµ РІ csv
 			   newCsvFile.writePlistToCSV(entries);
 			   
-			  // конструктор для класса RobotIptv с указанием имени файла
+			  // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РєР»Р°СЃСЃР° RobotIptv СЃ СѓРєР°Р·Р°РЅРёРµРј РёРјРµРЅРё С„Р°Р№Р»Р°
 			   RobotIptv robotIptv2 = new RobotIptv(M3UNAMEFILE1);	
 			   
-			  // читаем данные из csv
+			  // С‡РёС‚Р°РµРј РґР°РЅРЅС‹Рµ РёР· csv
 			   entries = newCsvFile.readDataFromCSV();
 			   
-			  // создаем m3u на основе данных из csv
+			  // СЃРѕР·РґР°РµРј m3u РЅР° РѕСЃРЅРѕРІРµ РґР°РЅРЅС‹С… РёР· csv
 			   robotIptv2.createM3uNoCheck(entries);
 
-			  // конструктор для класса RobotIptv с указанием имени файла, таймаута, длины проверочного буфера
-			  // и максимального к-ва попыток 
+			  // РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РґР»СЏ РєР»Р°СЃСЃР° RobotIptv СЃ СѓРєР°Р·Р°РЅРёРµРј РёРјРµРЅРё С„Р°Р№Р»Р°, С‚Р°Р№РјР°СѓС‚Р°, РґР»РёРЅС‹ РїСЂРѕРІРµСЂРѕС‡РЅРѕРіРѕ Р±СѓС„РµСЂР°
+			  // Рё РјР°РєСЃРёРјР°Р»СЊРЅРѕРіРѕ Рє-РІР° РїРѕРїС‹С‚РѕРє 
 			   RobotIptv robotIptv3 = new RobotIptv(M3UNAMEFILE2, TIMEOUT, LENDATA, MAXATTEMPT);	
 			   
-			   //   SQL запрос из базы для выбора каналов СПОРТИВНЫЕ
-			   String query2 = "SELECT * FROM plists WHERE (providerName = 'Novotel' OR providerName = 'Lanta') AND groupTitle = 'СПОРТИВНЫЕ'"; 
+			   //   SQL Р·Р°РїСЂРѕСЃ РёР· Р±Р°Р·С‹ РґР»СЏ РІС‹Р±РѕСЂР° РєР°РЅР°Р»РѕРІ РЎРџРћР РўРР’РќР«Р•
+			   String query2 = "SELECT * FROM plists WHERE (providerName = 'Novotel' OR providerName = 'Lanta') AND groupTitle = 'РЎРџРћР РўРР’РќР«Р•'"; 
 			   
-			   // получаем данные по SQL запросу
+			   // РїРѕР»СѓС‡Р°РµРј РґР°РЅРЅС‹Рµ РїРѕ SQL Р·Р°РїСЂРѕСЃСѓ
 			   entries = newSqlBase.readDataFromBase(query2);
 			   
-			   // создаем m3u на основе данных из базы с проверкой и заменой при необходимости потока
+			   // СЃРѕР·РґР°РµРј m3u РЅР° РѕСЃРЅРѕРІРµ РґР°РЅРЅС‹С… РёР· Р±Р°Р·С‹ СЃ РїСЂРѕРІРµСЂРєРѕР№ Рё Р·Р°РјРµРЅРѕР№ РїСЂРё РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РїРѕС‚РѕРєР°
 			   robotIptv3.createM3uCheck(entries);
 			   
 

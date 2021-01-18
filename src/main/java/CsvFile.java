@@ -1,6 +1,6 @@
 /*
 * Created by Max Maximoff on 11/07/2020.
-* класс для работы с csv файлами
+* РєР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ csv С„Р°Р№Р»Р°РјРё
 */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -23,19 +23,19 @@ import com.opencsv.bean.StatefulBeanToCsv;
 
 public class CsvFile {
 	
-// поля класса CsvFile    
-	private char delimiter; // разделитель в csv файле
-    private String path;    // путь и имя csv файла
-    private File csvFile;   // абстрактное представление csv файла
-	private FileInputStream inputStream; // поток для чтения csv файла
-    private FileOutputStream outputStream; // поток для записи в csv файла
+// РїРѕР»СЏ РєР»Р°СЃСЃР° CsvFile    
+	private char delimiter; // СЂР°Р·РґРµР»РёС‚РµР»СЊ РІ csv С„Р°Р№Р»Рµ
+    private String path;    // РїСѓС‚СЊ Рё РёРјСЏ csv С„Р°Р№Р»Р°
+    private File csvFile;   // Р°Р±СЃС‚СЂР°РєС‚РЅРѕРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ csv С„Р°Р№Р»Р°
+	private FileInputStream inputStream; // РїРѕС‚РѕРє РґР»СЏ С‡С‚РµРЅРёСЏ csv С„Р°Р№Р»Р°
+    private FileOutputStream outputStream; // РїРѕС‚РѕРє РґР»СЏ Р·Р°РїРёСЃРё РІ csv С„Р°Р№Р»Р°
     
-// конструктор класса CsvFile
+// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° CsvFile
     public CsvFile(String path, char delimiter) {
         this.path = path;
         this.delimiter = delimiter;
     }	
-// метод для запуска конструктора класса File и для создания csv файла    
+// РјРµС‚РѕРґ РґР»СЏ Р·Р°РїСѓСЃРєР° РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂР° РєР»Р°СЃСЃР° File Рё РґР»СЏ СЃРѕР·РґР°РЅРёСЏ csv С„Р°Р№Р»Р°    
    public void initCsv() throws IOException, NullPointerException {
 	   try { 
 		   csvFile = new File(path);
@@ -55,7 +55,7 @@ public class CsvFile {
 	    } 
     }
 
-// метод для чтения данных из csv файла в bean
+// РјРµС‚РѕРґ РґР»СЏ С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С… РёР· csv С„Р°Р№Р»Р° РІ bean
 	public List<Entry> readDataFromCSV() throws Exception 
 	{ 
 		
@@ -65,20 +65,20 @@ public class CsvFile {
 	    	inputStream = new FileInputStream(csvFile);
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 	  
-	        // создание объекта csvParser с указанием разделителя delimiter
+	        // СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° csvParser СЃ СѓРєР°Р·Р°РЅРёРµРј СЂР°Р·РґРµР»РёС‚РµР»СЏ delimiter
 	        CSVParser parser = new CSVParserBuilder().withSeparator(delimiter).build(); 
 	  
-	        // создание объекта csvReaderс параметрами filereader и parser
+	        // СЃРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° csvReaderСЃ РїР°СЂР°РјРµС‚СЂР°РјРё filereader Рё parser
 	        CSVReader csvReader = new CSVReaderBuilder(reader) 
 	                                  .withCSVParser(parser) 
 	                                  .build(); 
 	  
-	        // Читаем всю инфу из csv файла при помощи метода readAll()
+	        // Р§РёС‚Р°РµРј РІСЃСЋ РёРЅС„Сѓ РёР· csv С„Р°Р№Р»Р° РїСЂРё РїРѕРјРѕС‰Рё РјРµС‚РѕРґР° readAll()
 	        List<String[]> allData = csvReader.readAll(); 
 
 	        Entry.Builder entry = null;
 	  
-		        // Добавляем данные из List в bean. 
+		        // Р”РѕР±Р°РІР»СЏРµРј РґР°РЅРЅС‹Рµ РёР· List РІ bean. 
 		        for (String[] row : allData) { 
 		            for (int i=0;i<row.length;++i) { 
 		            	entry = new Entry.Builder()
@@ -99,36 +99,36 @@ public class CsvFile {
 	    return entries;
 	}
 	
-//  Метод для перезаписи csv файла целиком	
+//  РњРµС‚РѕРґ РґР»СЏ РїРµСЂРµР·Р°РїРёСЃРё csv С„Р°Р№Р»Р° С†РµР»РёРєРѕРј	
 	public void writePlistToCSV (List<Entry> entries) throws Exception {
 		
 		try
 		{
-			// cоздание потока для записи данных plist в csv фаил
+			// cРѕР·РґР°РЅРёРµ РїРѕС‚РѕРєР° РґР»СЏ Р·Р°РїРёСЃРё РґР°РЅРЅС‹С… plist РІ csv С„Р°РёР»
 			outputStream = new FileOutputStream(csvFile);
-			// создание необходимого буфера для записи в csv
+			// СЃРѕР·РґР°РЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕРіРѕ Р±СѓС„РµСЂР° РґР»СЏ Р·Р°РїРёСЃРё РІ csv
             BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));  
     		
-            // создаем Mapping Strategy чтобы расположить столбцы согласно их имени
+            // СЃРѕР·РґР°РµРј Mapping Strategy С‡С‚РѕР±С‹ СЂР°СЃРїРѕР»РѕР¶РёС‚СЊ СЃС‚РѕР»Р±С†С‹ СЃРѕРіР»Р°СЃРЅРѕ РёС… РёРјРµРЅРё
             ColumnPositionMappingStrategy<Entry> mappingStrategy= new ColumnPositionMappingStrategy<Entry>(); 
             mappingStrategy.setType(Entry.class);  
             
-            // Расположение имен столбцов так, как указано в приведенном ниже массиве.
+            // Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Рє, РєР°Рє СѓРєР°Р·Р°РЅРѕ РІ РїСЂРёРІРµРґРµРЅРЅРѕРј РЅРёР¶Рµ РјР°СЃСЃРёРІРµ.
             String[] columns = new String[]  
                     { "tvchId", "channelName", "groupTitle", "channelUri", "providerName"}; 
             mappingStrategy.setColumnMapping(columns);
         
             
-            // Создание объекта StatefulBeanToCsv
+            // РЎРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° StatefulBeanToCsv
             StatefulBeanToCsvBuilder<Entry> builder= 
                         new StatefulBeanToCsvBuilder<Entry>(writer); 
             StatefulBeanToCsv<Entry> beanWriter =  
           builder.withSeparator(delimiter).withMappingStrategy(mappingStrategy).build(); 
   
-            // Запись list в объект StatefulBeanToCsv
+            // Р—Р°РїРёСЃСЊ list РІ РѕР±СЉРµРєС‚ StatefulBeanToCsv
             beanWriter.write(entries); 
   
-            // закрываем writer и outputStream
+            // Р·Р°РєСЂС‹РІР°РµРј writer Рё outputStream
             writer.close(); 
 	
 		}
@@ -140,37 +140,37 @@ public class CsvFile {
 	}
 
 
-	//  Метод для добавления plist в csv файл
+	//  РњРµС‚РѕРґ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ plist РІ csv С„Р°Р№Р»
 	public void addPlistToCSV (List<Entry> entries) throws Exception {
 			
 			try
 			{
-				// cоздание потока для добавления данных plist в csv фаил
+				// cРѕР·РґР°РЅРёРµ РїРѕС‚РѕРєР° РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ РґР°РЅРЅС‹С… plist РІ csv С„Р°РёР»
 				outputStream = new FileOutputStream(csvFile, true);
-				// создание необходимого буфера для записи в csv
+				// СЃРѕР·РґР°РЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕРіРѕ Р±СѓС„РµСЂР° РґР»СЏ Р·Р°РїРёСЃРё РІ csv
 	            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(outputStream));  
 
 	    		
-	            // создаем Mapping Strategy чтобы расположить столбцы согласно их имени
+	            // СЃРѕР·РґР°РµРј Mapping Strategy С‡С‚РѕР±С‹ СЂР°СЃРїРѕР»РѕР¶РёС‚СЊ СЃС‚РѕР»Р±С†С‹ СЃРѕРіР»Р°СЃРЅРѕ РёС… РёРјРµРЅРё
 	            ColumnPositionMappingStrategy<Entry> mappingStrategy= new ColumnPositionMappingStrategy<Entry>(); 
 	            mappingStrategy.setType(Entry.class);  
 	            
-	            // Расположение имен столбцов так, как указано в приведенном ниже массиве.
+	            // Р Р°СЃРїРѕР»РѕР¶РµРЅРёРµ РёРјРµРЅ СЃС‚РѕР»Р±С†РѕРІ С‚Р°Рє, РєР°Рє СѓРєР°Р·Р°РЅРѕ РІ РїСЂРёРІРµРґРµРЅРЅРѕРј РЅРёР¶Рµ РјР°СЃСЃРёРІРµ.
 	            String[] columns = new String[]  
 	                    { "tvchId", "channelName", "groupTitle", "channelUri", "providerName"}; 
 	            mappingStrategy.setColumnMapping(columns);
 	        
 	            
-	            // Создание объекта StatefulBeanToCsv
+	            // РЎРѕР·РґР°РЅРёРµ РѕР±СЉРµРєС‚Р° StatefulBeanToCsv
 	            StatefulBeanToCsvBuilder<Entry> builder= 
 	                        new StatefulBeanToCsvBuilder<Entry>(writer); 
 	            StatefulBeanToCsv<Entry> beanWriter =  
 	          builder.withSeparator(delimiter).withMappingStrategy(mappingStrategy).build(); 
 	  
-	            // Запись list в объект StatefulBeanToCsv
+	            // Р—Р°РїРёСЃСЊ list РІ РѕР±СЉРµРєС‚ StatefulBeanToCsv
 	            beanWriter.write(entries); 
 	  
-	            // закрываем writer и outputStream
+	            // Р·Р°РєСЂС‹РІР°РµРј writer Рё outputStream
 	            writer.close(); 
 		
 			}

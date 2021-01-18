@@ -1,7 +1,7 @@
 /**
  * Created by tgermain on 30/12/2017.
  * and edited by Max Maximoff on 11/07/2020
- * Класс для парсинга m3u листов
+ * В РљР»Р°СЃСЃ РґР»СЏ РїР°СЂСЃРёРЅРіР° m3u Р»РёСЃС‚РѕРІ
  */
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -23,8 +23,8 @@ public class Parser {
     private static final Pattern TVG_NAME_REGEX = Pattern.compile(".*tvg-name=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);
     private static final Pattern TVG_LOGO_REGEX = Pattern.compile(".*tvg-logo=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);
     private static final Pattern TVG_SHIFT_REGEX = Pattern.compile(".*tvg-shift=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);
-    private static final Pattern TVCH_ID_REGEX = Pattern.compile(".*tvch-id=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);//добавил
-    private static final Pattern PROVIDER_NAME_REGEX = Pattern.compile(".*provider-name=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);//добавил
+    private static final Pattern TVCH_ID_REGEX = Pattern.compile(".*tvch-id=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);//РґРѕР±Р°РІРёР»
+    private static final Pattern PROVIDER_NAME_REGEX = Pattern.compile(".*provider-name=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);//РґРѕР±Р°РІРёР»
     private static final Pattern GROUP_TITLE_REGEX = Pattern.compile(".*group-title=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);
     private static final Pattern RADIO_REGEX = Pattern.compile(".*radio=\"(.?|.+?)\".*", Pattern.CASE_INSENSITIVE);
     private static final Pattern CHANNEL_NAME_REGEX = Pattern.compile(".*,(.+?)$", Pattern.CASE_INSENSITIVE);

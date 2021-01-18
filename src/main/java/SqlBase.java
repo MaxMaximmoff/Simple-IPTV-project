@@ -1,6 +1,6 @@
 /*
 * Created by Max Maximoff on 11/07/2020.
-* Класс для работы с базой mySQL
+* РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ Р±Р°Р·РѕР№ mySQL
 */
 import java.sql.Connection;
 import java.sql.Statement;
@@ -14,29 +14,29 @@ import java.sql.ResultSet;
 public class SqlBase {
 	
                            
-	   static final String DATABASE_URL = "jdbc:mysql://localhost/plistsDB";  // Адрес базы
-	   static final String USER_LOGIN = "user_login";                         // Логин
-	   static final String USER_PASSWORD = "password";                        // Пароль
+	   static final String DATABASE_URL = "jdbc:mysql://localhost/plistsDB";  // РђРґСЂРµСЃ Р±Р°Р·С‹
+	   static final String USER_LOGIN = "user_login";                         // Р›РѕРіРёРЅ
+	   static final String USER_PASSWORD = "password";                        // РџР°СЂРѕР»СЊ
 	   
    
 	   
-// Метод для удаления всех записей в базе	   
+// РњРµС‚РѕРґ РґР»СЏ СѓРґР°Р»РµРЅРёСЏ РІСЃРµС… Р·Р°РїРёСЃРµР№ РІ Р±Р°Р·Рµ	   
 		public void deleteAllPlistsInBase () throws Exception {
 		      Connection connection = null; // manages connection
 		      PreparedStatement preparedStatement = null;
 				try
 				{
 					
-			    	// установливаем соединение с базой данных  
+			    	// СѓСЃС‚Р°РЅРѕРІР»РёРІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…  
 			          connection = DriverManager.getConnection( 
 			             DATABASE_URL, USER_LOGIN, USER_PASSWORD );
 			          
-			          // создаем Statement для опроса базы
+			          // СЃРѕР·РґР°РµРј Statement РґР»СЏ РѕРїСЂРѕСЃР° Р±Р°Р·С‹
 			          String query = "TRUNCATE TABLE plists";
 			          preparedStatement = connection.prepareStatement(query);
 			          preparedStatement.executeUpdate();
 			          
-			          // Информационное сообщение
+			          // РРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
 			          System.out.println("All entries in the database have been deleted.");
 
 				}
@@ -47,7 +47,7 @@ public class SqlBase {
 
 			}	   
 	   
-	//  Метод для добавления plist в базу данных
+	//  РњРµС‚РѕРґ РґР»СЏ РґРѕР±Р°РІР»РµРЅРёСЏ plist РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…
 	public void addPlistToBase (List<Entry> entries) throws Exception {
 		
 	      Connection connection = null; // manages connection
@@ -56,14 +56,14 @@ public class SqlBase {
 			{
 
 				
-		    	// установливаем соединение с базой данных  
+		    	// СѓСЃС‚Р°РЅРѕРІР»РёРІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…  
 		          connection = DriverManager.getConnection( 
 		             DATABASE_URL, USER_LOGIN, USER_PASSWORD );
-		        // создаем Statement для опроса базы
+		        // СЃРѕР·РґР°РµРј Statement РґР»СЏ РѕРїСЂРѕСЃР° Р±Р°Р·С‹
 		          String query = "INSERT INTO plists(channelName, groupTitle, channelUri, providerName, tvchId)"
 		          		+ "  VALUES (?, ?, ?, ?, ?)";
 		          preparedStatement = connection.prepareStatement(query);
-                // добавляем поэлементно строоки из bean в Statement
+                // РґРѕР±Р°РІР»СЏРµРј РїРѕСЌР»РµРјРµРЅС‚РЅРѕ СЃС‚СЂРѕРѕРєРё РёР· bean РІ Statement
 					for (int i=0; i < entries.size(); ++i) {
 						String chId = entries.get(i).getTvchId();
 
@@ -77,7 +77,7 @@ public class SqlBase {
 
 					}
 					
-					// Информационное сообщение
+					// РРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
 					System.out.println("Data added to the database.");
 		
 			}
@@ -88,7 +88,7 @@ public class SqlBase {
 
 		}
 
-	//  Метод для обновления plist в базе данных	
+	//  РњРµС‚РѕРґ РґР»СЏ РѕР±РЅРѕРІР»РµРЅРёСЏ plist РІ Р±Р°Р·Рµ РґР°РЅРЅС‹С…	
 	public void apdatePlistToBase (List<Entry> entries) throws Exception {
 		
 	      Connection connection = null; // manages connection
@@ -96,14 +96,14 @@ public class SqlBase {
 			try
 			{
 
-		    	// установливаем соединение с базой данных  
+		    	// СѓСЃС‚Р°РЅРѕРІР»РёРІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С…  
 		          connection = DriverManager.getConnection( 
 		             DATABASE_URL, USER_LOGIN, USER_PASSWORD );
 		          
-		        // создаем Statement для опроса базы
+		        // СЃРѕР·РґР°РµРј Statement РґР»СЏ РѕРїСЂРѕСЃР° Р±Р°Р·С‹
 		          String query = "UPDATE plists SET channelName=?, groupTitle=?, channelUri=?, providerName=? WHERE tvchId=?";
 		          preparedStatement = connection.prepareStatement(query);
-		       // добавляем поэлементно строоки из bean в Statement
+		       // РґРѕР±Р°РІР»СЏРµРј РїРѕСЌР»РµРјРµРЅС‚РЅРѕ СЃС‚СЂРѕРѕРєРё РёР· bean РІ Statement
 					for (int i=0; i < entries.size(); ++i) {
 						String chId = entries.get(i).getTvchId();
 
@@ -116,7 +116,7 @@ public class SqlBase {
 		
 					}
 					
-				// Информационное сообщение
+				// РРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ
 				System.out.println("Data in the database has been updated.");
 		
 			}
@@ -129,7 +129,7 @@ public class SqlBase {
 	
 	
 	
-// Метод чтения данных из таблицы базы в bean по SQL запросу
+// РњРµС‚РѕРґ С‡С‚РµРЅРёСЏ РґР°РЅРЅС‹С… РёР· С‚Р°Р±Р»РёС†С‹ Р±Р°Р·С‹ РІ bean РїРѕ SQL Р·Р°РїСЂРѕСЃСѓ
 	public List<Entry> readDataFromBase (String query) throws Exception {
 	      Connection connection = null; // manages connection
 	      Statement statement = null; // query statement
@@ -141,16 +141,16 @@ public class SqlBase {
 			try
 			{
 
-				// установливаем соединение с базой данных 
+				// СѓСЃС‚Р°РЅРѕРІР»РёРІР°РµРј СЃРѕРµРґРёРЅРµРЅРёРµ СЃ Р±Р°Р·РѕР№ РґР°РЅРЅС‹С… 
 		          connection = DriverManager.getConnection( 
 		             DATABASE_URL, USER_LOGIN, USER_PASSWORD );
 		          // create Statement for querying database INSERT INTO
 
 	                statement = connection.createStatement();
-	                // Подготавливаем ResultSet зависящий от query 
+	                // РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј ResultSet Р·Р°РІРёСЃСЏС‰РёР№ РѕС‚ query 
 	                resultSet = statement.executeQuery(query);
 	                Entry.Builder entry = null;
-	                // Записываем каждую строку таблицы в entry
+	                // Р—Р°РїРёСЃС‹РІР°РµРј РєР°Р¶РґСѓСЋ СЃС‚СЂРѕРєСѓ С‚Р°Р±Р»РёС†С‹ РІ entry
 	                while(resultSet.next()){
 		            	entry = new Entry.Builder()
 		            			.tvchId(resultSet.getString(1))
@@ -158,7 +158,7 @@ public class SqlBase {
 		            			.groupTitle(resultSet.getString(3))
 		            			.channelUri(resultSet.getString(4))
 		            			.providerName(resultSet.getString(5));
-		            	// добавляем entry в List
+		            	// РґРѕР±Р°РІР»СЏРµРј entry РІ List
 		            	entries.add(entry.build());
 
 	                }
@@ -168,7 +168,7 @@ public class SqlBase {
 			{
 				e.printStackTrace();
 			}
-		// возвращаем список	
+		// РІРѕР·РІСЂР°С‰Р°РµРј СЃРїРёСЃРѕРє	
 		  return entries;
 
 		}	

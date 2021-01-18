@@ -1,7 +1,7 @@
 /**
  * Created by tgermain on 30/12/2017.
  * and edited by Max Maximoff on 11/07/2020
- * Класс для работы с bean
+ * РљР»Р°СЃСЃ РґР»СЏ СЂР°Р±РѕС‚С‹ СЃ bean
  */
 public class Entry {
 

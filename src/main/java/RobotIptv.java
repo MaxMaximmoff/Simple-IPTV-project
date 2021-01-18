@@ -1,6 +1,6 @@
 /*
  * Created by Max Maximoff on 11/07/2020.
- * Создание плейлиста с проверкой и повторными подключениями в случае неудачи
+ * РЎРѕР·РґР°РЅРёРµ РїР»РµР№Р»РёСЃС‚Р° СЃ РїСЂРѕРІРµСЂРєРѕР№ Рё РїРѕРІС‚РѕСЂРЅС‹РјРё РїРѕРґРєР»СЋС‡РµРЅРёСЏРјРё РІ СЃР»СѓС‡Р°Рµ РЅРµСѓРґР°С‡Рё
  */
 import java.net.*;
 import java.nio.charset.StandardCharsets;
@@ -17,22 +17,22 @@ import java.io.*;
 
 public class RobotIptv {
 	
-// Поля класса RobotIptv    
-	private String nameFile = "./src/main/resources/plist.m3u"; // путь и имя m3u по умолчанию
+// РџРѕР»СЏ РєР»Р°СЃСЃР° RobotIptv    
+	private String nameFile = "./src/main/resources/plist.m3u"; // РїСѓС‚СЊ Рё РёРјСЏ m3u РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 	private int timeOut = 3*1000;    // timeout
-	private int lenData = 8192;      // Длина буфера для проверки наличия потока
-	private int maxAttemt = 3;       // К-во попыток для проверки
+	private int lenData = 8192;      // Р”Р»РёРЅР° Р±СѓС„РµСЂР° РґР»СЏ РїСЂРѕРІРµСЂРєРё РЅР°Р»РёС‡РёСЏ РїРѕС‚РѕРєР°
+	private int maxAttemt = 3;       // Рљ-РІРѕ РїРѕРїС‹С‚РѕРє РґР»СЏ РїСЂРѕРІРµСЂРєРё
 
-// Конструктор класса RobotIptv с параметрами по умолчанию
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° RobotIptv СЃ РїР°СЂР°РјРµС‚СЂР°РјРё РїРѕ СѓРјРѕР»С‡Р°РЅРёСЋ
 	public RobotIptv() {
 	}	
 	
-// Конструктор класса RobotIptv с указанием только имени файла
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° RobotIptv СЃ СѓРєР°Р·Р°РЅРёРµРј С‚РѕР»СЊРєРѕ РёРјРµРЅРё С„Р°Р№Р»Р°
 	public RobotIptv(String nameFile) {
 	    this.nameFile = nameFile;
 	}
 	
-// Конструктор класса RobotIptv с заданием параметров
+// РљРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ РєР»Р°СЃСЃР° RobotIptv СЃ Р·Р°РґР°РЅРёРµРј РїР°СЂР°РјРµС‚СЂРѕРІ
     public RobotIptv(String nameFile, int timeOut, int lenData, int maxAttemt) {
         this.nameFile = nameFile;
         this.timeOut = timeOut;
@@ -40,20 +40,20 @@ public class RobotIptv {
         this.maxAttemt = maxAttemt;
     }
     
-// Метод для создания плейлиста из bean с проверкой на proxytv.ru    
+// РњРµС‚РѕРґ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїР»РµР№Р»РёСЃС‚Р° РёР· bean СЃ РїСЂРѕРІРµСЂРєРѕР№ РЅР° proxytv.ru    
 	public void createM3uCheck (List<Entry> entries) throws Exception{
 
 		try {
-			// открываем поток для записи в фаил m3u
+			// РѕС‚РєСЂС‹РІР°РµРј РїРѕС‚РѕРє РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°РёР» m3u
 				FileOutputStream createM3U = new FileOutputStream(nameFile); 
-			// добавляем указатель начала файла m3u	
+			// РґРѕР±Р°РІР»СЏРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР°С‡Р°Р»Р° С„Р°Р№Р»Р° m3u	
 				String extm3u = "#EXTM3U\n";
 				createM3U.write(extm3u.getBytes());
-			// формируем строки для каждого канала из bean	
+			// С„РѕСЂРјРёСЂСѓРµРј СЃС‚СЂРѕРєРё РґР»СЏ РєР°Р¶РґРѕРіРѕ РєР°РЅР°Р»Р° РёР· bean	
 				for (int i=0; i < entries.size(); ++i) {
 					String extinf = String.format("#EXTINF:-1 group-title=\"%s\",%s\n", entries.get(i).getGroupTitle(), entries.get(i).getChannelName());		
 					createM3U.write(extinf.getBytes("UTF-8"));
-			// вызываем функцию для проверки потока каждого канала
+			// РІС‹Р·С‹РІР°РµРј С„СѓРЅРєС†РёСЋ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕС‚РѕРєР° РєР°Р¶РґРѕРіРѕ РєР°РЅР°Р»Р°
 					String stream = vrfStream (entries.get(i).getTvchId(), entries.get(i).getChannelUri());
 					createM3U.write(stream.getBytes()); 
 					
@@ -68,20 +68,20 @@ public class RobotIptv {
 		}
 }
 	
-	// Метод для создания плейлиста из bean без проверки на proxytv.ru    
+	// РњРµС‚РѕРґ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїР»РµР№Р»РёСЃС‚Р° РёР· bean Р±РµР· РїСЂРѕРІРµСЂРєРё РЅР° proxytv.ru    
 		public void createM3uNoCheck (List<Entry> entries) throws Exception{
 
 			try {
-				// открываем поток для записи в фаил m3u
+				// РѕС‚РєСЂС‹РІР°РµРј РїРѕС‚РѕРє РґР»СЏ Р·Р°РїРёСЃРё РІ С„Р°РёР» m3u
 					FileOutputStream createM3U = new FileOutputStream(nameFile); 
-				// добавляем указатель начала файла m3u	
+				// РґРѕР±Р°РІР»СЏРµРј СѓРєР°Р·Р°С‚РµР»СЊ РЅР°С‡Р°Р»Р° С„Р°Р№Р»Р° m3u	
 					String extm3u = "#EXTM3U\n";
 					createM3U.write(extm3u.getBytes());
-				// формируем строки для каждого канала из bean	
+				// С„РѕСЂРјРёСЂСѓРµРј СЃС‚СЂРѕРєРё РґР»СЏ РєР°Р¶РґРѕРіРѕ РєР°РЅР°Р»Р° РёР· bean	
 					for (int i=0; i < entries.size(); ++i) {
 						String extinf = String.format("#EXTINF:-1 group-title=\"%s\",%s\n", entries.get(i).getGroupTitle(), entries.get(i).getChannelName());		
 						createM3U.write(extinf.getBytes("UTF-8"));
-				// вызываем функцию для проверки потока каждого канала
+				// РІС‹Р·С‹РІР°РµРј С„СѓРЅРєС†РёСЋ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕС‚РѕРєР° РєР°Р¶РґРѕРіРѕ РєР°РЅР°Р»Р°
 						String stream = entries.get(i).getChannelUri() + '\n';
 						createM3U.write(stream.getBytes()); 
 					}
@@ -95,58 +95,58 @@ public class RobotIptv {
 			}
 	}
 
-// Метод для проверки потока iptv. замена неработающего URI на рабочий
+// РњРµС‚РѕРґ РґР»СЏ РїСЂРѕРІРµСЂРєРё РїРѕС‚РѕРєР° iptv. Р·Р°РјРµРЅР° РЅРµСЂР°Р±РѕС‚Р°СЋС‰РµРіРѕ URI РЅР° СЂР°Р±РѕС‡РёР№
 	public String vrfStream (String idchann, String stream) throws Exception{
 		
 		try {
 	
-			int attempt = 0;                 // количество попыток
-			boolean servconnect = true;      // предполагаем что stream рабочий
-			int  buffer_fullness = 0;        // количество символов в проверочном буфере
-			String unf = "udpxy not found";  // вариант ответа от proxytv.ru
-			// Цикл проверки stream
+			int attempt = 0;                 // РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕРїС‹С‚РѕРє
+			boolean servconnect = true;      // РїСЂРµРґРїРѕР»Р°РіР°РµРј С‡С‚Рѕ stream СЂР°Р±РѕС‡РёР№
+			int  buffer_fullness = 0;        // РєРѕР»РёС‡РµСЃС‚РІРѕ СЃРёРјРІРѕР»РѕРІ РІ РїСЂРѕРІРµСЂРѕС‡РЅРѕРј Р±СѓС„РµСЂРµ
+			String unf = "udpxy not found";  // РІР°СЂРёР°РЅС‚ РѕС‚РІРµС‚Р° РѕС‚ proxytv.ru
+			// Р¦РёРєР» РїСЂРѕРІРµСЂРєРё stream
 			do {
 				try{
-					//Подсоединяемся к UDPXY с установленным TIMEOUT
+					//РџРѕРґСЃРѕРµРґРёРЅСЏРµРјСЃСЏ Рє UDPXY СЃ СѓСЃС‚Р°РЅРѕРІР»РµРЅРЅС‹Рј TIMEOUT
 					URL udpxy = new URL(stream);
 					HttpURLConnection udpxyConnection = (HttpURLConnection) udpxy.openConnection();
 					udpxyConnection.setConnectTimeout(timeOut);
 //					udpxyConnection.connect();
 					BufferedReader bufStream = new BufferedReader(new InputStreamReader(udpxyConnection.getInputStream()));
-					//создаем проверочный буфер размером lenData
+					//СЃРѕР·РґР°РµРј РїСЂРѕРІРµСЂРѕС‡РЅС‹Р№ Р±СѓС„РµСЂ СЂР°Р·РјРµСЂРѕРј lenData
 					char[] cbuf = new char[lenData];
-					//возвращаем число попавши в буфер cbuf символов 
+					//РІРѕР·РІСЂР°С‰Р°РµРј С‡РёСЃР»Рѕ РїРѕРїР°РІС€Рё РІ Р±СѓС„РµСЂ cbuf СЃРёРјРІРѕР»РѕРІ 
 					buffer_fullness = bufStream.read(cbuf, 0, lenData);
 					servconnect = true;
 		
 				}
-				// случай если не удалось подсоединиться к данному UDPXY
+				// СЃР»СѓС‡Р°Р№ РµСЃР»Рё РЅРµ СѓРґР°Р»РѕСЃСЊ РїРѕРґСЃРѕРµРґРёРЅРёС‚СЊСЃСЏ Рє РґР°РЅРЅРѕРјСѓ UDPXY
 				catch(IOException ioe){
 					servconnect = false;
 					attempt +=1; 
 					System.out.printf("ch #%s - NO connection\n", idchann);
 				}
-				// проверка качества потока
+				// РїСЂРѕРІРµСЂРєР° РєР°С‡РµСЃС‚РІР° РїРѕС‚РѕРєР°
 				if(servconnect) 
 				{
-	                // если поток хороший
+	                // РµСЃР»Рё РїРѕС‚РѕРє С…РѕСЂРѕС€РёР№
 					if (buffer_fullness==lenData) {
 						System.out.printf("ch #%s - GOOD stream\n", idchann);	
-						// возвращаем поток
+						// РІРѕР·РІСЂР°С‰Р°РµРј РїРѕС‚РѕРє
 						return stream + "\n";
 						
 					}
-	             // Если поток плохой случае запускаем повторную проверку
+	             // Р•СЃР»Рё РїРѕС‚РѕРє РїР»РѕС…РѕР№ СЃР»СѓС‡Р°Рµ Р·Р°РїСѓСЃРєР°РµРј РїРѕРІС‚РѕСЂРЅСѓСЋ РїСЂРѕРІРµСЂРєСѓ
 					else {
 						attempt +=1;
 					    System.out.printf("ch #%s - BAD stream\n", idchann);
 					}
 				}
-				// обработка одного из вариантов ответа от proxytv.ru
+				// РѕР±СЂР°Р±РѕС‚РєР° РѕРґРЅРѕРіРѕ РёР· РІР°СЂРёР°РЅС‚РѕРІ РѕС‚РІРµС‚Р° РѕС‚ proxytv.ru
 				if(stream == unf) {
 					System.out.printf("ch #%s - %s\n", idchann, unf);
 				}
-				// Получаем новый URI с proxytv.ru в случае неработоспособности старого
+				// РџРѕР»СѓС‡Р°РµРј РЅРѕРІС‹Р№ URI СЃ proxytv.ru РІ СЃР»СѓС‡Р°Рµ РЅРµСЂР°Р±РѕС‚РѕСЃРїРѕСЃРѕР±РЅРѕСЃС‚Рё СЃС‚Р°СЂРѕРіРѕ
 				String serverQueryString = String.format("http://proxytv.ru/iptv/php/allchan.php?id=%s", idchann);
 				URL connect = new URL(serverQueryString);
 				
@@ -154,7 +154,7 @@ public class RobotIptv {
 					BufferedReader inputLine = new BufferedReader(new InputStreamReader(connect.openStream()));
 					stream = inputLine.readLine();
 				}
-				// и повторяем цикл снова maxAttemt раз
+				// Рё РїРѕРІС‚РѕСЂСЏРµРј С†РёРєР» СЃРЅРѕРІР° maxAttemt СЂР°Р·
 		    }while(attempt < maxAttemt);
 			
 			stream = "http://proxytv.ru/iptv/img/notv.mp4";
@@ -167,16 +167,16 @@ public class RobotIptv {
 		return stream + "\n";
 	}
 
-// Метод для парсинга сайта http://proxytv.ru с помощью Selenium с целью получения данных провайдера(ов)
+// РњРµС‚РѕРґ РґР»СЏ РїР°СЂСЃРёРЅРіР° СЃР°Р№С‚Р° http://proxytv.ru СЃ РїРѕРјРѕС‰СЊСЋ Selenium СЃ С†РµР»СЊСЋ РїРѕР»СѓС‡РµРЅРёСЏ РґР°РЅРЅС‹С… РїСЂРѕРІР°Р№РґРµСЂР°(РѕРІ)
 	public List<Entry> getProviderPlist (String providerList, String driverName) throws Exception {
     	
-    	// список bean куда будем сохранять данные о каналах
+    	// СЃРїРёСЃРѕРє bean РєСѓРґР° Р±СѓРґРµРј СЃРѕС…СЂР°РЅСЏС‚СЊ РґР°РЅРЅС‹Рµ Рѕ РєР°РЅР°Р»Р°С…
     	List<Entry> entries = new ArrayList<Entry>();
     	
     	try {
-	    	// указываем драйвер		
+	    	// СѓРєР°Р·С‹РІР°РµРј РґСЂР°Р№РІРµСЂ		
 			System.setProperty("webdriver.chrome.driver", driverName);
-	        // создаем и добавляем аргументы в ChromeOptions
+	        // СЃРѕР·РґР°РµРј Рё РґРѕР±Р°РІР»СЏРµРј Р°СЂРіСѓРјРµРЅС‚С‹ РІ ChromeOptions
 	        ChromeOptions options = new ChromeOptions();
 		        options.addArguments("--window-size=1920,1080");
 		        options.addArguments("--disable-gpu");
@@ -184,50 +184,50 @@ public class RobotIptv {
 		        options.addArguments("--proxy-server='direct://'");
 		        options.addArguments("--proxy-bypass-list=*");
 		        options.addArguments("--start-maximized");
-		     // открываем Chrome в режиме headless (браузер на экране не появляется)
+		     // РѕС‚РєСЂС‹РІР°РµРј Chrome РІ СЂРµР¶РёРјРµ headless (Р±СЂР°СѓР·РµСЂ РЅР° СЌРєСЂР°РЅРµ РЅРµ РїРѕСЏРІР»СЏРµС‚СЃСЏ)
 		        options.addArguments("--headless");
-		     // Загрузка CHrome с профилем в котором установлено расширение ModeHeaders
+		     // Р—Р°РіСЂСѓР·РєР° CHrome СЃ РїСЂРѕС„РёР»РµРј РІ РєРѕС‚РѕСЂРѕРј СѓСЃС‚Р°РЅРѕРІР»РµРЅРѕ СЂР°СЃС€РёСЂРµРЅРёРµ ModeHeaders
 				options.addArguments("user-data-dir=C:\\Selenium\\BrowserProfile"); 
-             //	Убираем сообщение "Chrome is being controlled by automated test software java"
+             //	РЈР±РёСЂР°РµРј СЃРѕРѕР±С‰РµРЅРёРµ "Chrome is being controlled by automated test software java"
 				options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"}); 
-			// конструктор 	WebDriver с ChromeOptions
+			// РєРѕРЅСЃС‚СЂСѓРєС‚РѕСЂ 	WebDriver СЃ ChromeOptions
 	        WebDriver driver = new ChromeDriver(options);	
-	        // открываем страницу для парсинга		
+	        // РѕС‚РєСЂС‹РІР°РµРј СЃС‚СЂР°РЅРёС†Сѓ РґР»СЏ РїР°СЂСЃРёРЅРіР°		
 			  String baseUrl = "http://proxytv.ru"; 
 			  driver.get(baseUrl);
 			  
-			  // Вводим запрос с указанием провайдера и парсим
+			  // Р’РІРѕРґРёРј Р·Р°РїСЂРѕСЃ СЃ СѓРєР°Р·Р°РЅРёРµРј РїСЂРѕРІР°Р№РґРµСЂР° Рё РїР°СЂСЃРёРј
 			  WebElement input = driver.findElement(By.name("udpxyaddr")); 
 			  WebElement button = driver.findElement(By.id("btnsearch"));
-			  // Преобразовываем строку-список провайдеров в массив
+			  // РџСЂРµРѕР±СЂР°Р·РѕРІС‹РІР°РµРј СЃС‚СЂРѕРєСѓ-СЃРїРёСЃРѕРє РїСЂРѕРІР°Р№РґРµСЂРѕРІ РІ РјР°СЃСЃРёРІ
 			  String[] provider = providerList.split(",");
-			  // делаем запросы на proxytv.ru для каждого провайдера из списка
+			  // РґРµР»Р°РµРј Р·Р°РїСЂРѕСЃС‹ РЅР° proxytv.ru РґР»СЏ РєР°Р¶РґРѕРіРѕ РїСЂРѕРІР°Р№РґРµСЂР° РёР· СЃРїРёСЃРєР°
 			  for (int i=0; i < provider.length; ++i) {
 				  
 				  StringBuilder content = new StringBuilder();
-			      // формируем запрос
+			      // С„РѕСЂРјРёСЂСѓРµРј Р·Р°РїСЂРѕСЃ
 				  String QueryString = String.format("pl:%s", provider[i]); 
-				  input.clear(); // очищаем поле ввода
-				  input.sendKeys(QueryString); // вводим данные
-				  button.click(); // нажатие на кнопку "Найти"
+				  input.clear(); // РѕС‡РёС‰Р°РµРј РїРѕР»Рµ РІРІРѕРґР°
+				  input.sendKeys(QueryString); // РІРІРѕРґРёРј РґР°РЅРЅС‹Рµ
+				  button.click(); // РЅР°Р¶Р°С‚РёРµ РЅР° РєРЅРѕРїРєСѓ "РќР°Р№С‚Рё"
 				  
-				  // Информационное сообщение на экране о совершении запроса
+				  // РРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РЅР° СЌРєСЂР°РЅРµ Рѕ СЃРѕРІРµСЂС€РµРЅРёРё Р·Р°РїСЂРѕСЃР°
 				  System.out.println("Query made for " + provider[i] + " provider");
-				  Thread.sleep(3000); // пауза 3 секунды для надежного получения отклика с сайта
-				  // результаты с экрана записываем в строку
+				  Thread.sleep(3000); // РїР°СѓР·Р° 3 СЃРµРєСѓРЅРґС‹ РґР»СЏ РЅР°РґРµР¶РЅРѕРіРѕ РїРѕР»СѓС‡РµРЅРёСЏ РѕС‚РєР»РёРєР° СЃ СЃР°Р№С‚Р°
+				  // СЂРµР·СѓР»СЊС‚Р°С‚С‹ СЃ СЌРєСЂР°РЅР° Р·Р°РїРёСЃС‹РІР°РµРј РІ СЃС‚СЂРѕРєСѓ
 				  String results = driver.findElement(By.id("results")).getText(); 
 				  
-				  // преобразование строки результатов к виду удобному для парсинга
+				  // РїСЂРµРѕР±СЂР°Р·РѕРІР°РЅРёРµ СЃС‚СЂРѕРєРё СЂРµР·СѓР»СЊС‚Р°С‚РѕРІ Рє РІРёРґСѓ СѓРґРѕР±РЅРѕРјСѓ РґР»СЏ РїР°СЂСЃРёРЅРіР°
 				  if(results != null) {
 					    String line;
-				    	// вырезаем ненужное
-				  	    String cut_results = results.replace("\n------------ ProxyTV-5 - стабильное IPTV для медиацентра Kodi!!! ------------", "");
+				    	// РІС‹СЂРµР·Р°РµРј РЅРµРЅСѓР¶РЅРѕРµ
+				  	    String cut_results = results.replace("\n------------ ProxyTV-5 - СЃС‚Р°Р±РёР»СЊРЅРѕРµ IPTV РґР»СЏ РјРµРґРёР°С†РµРЅС‚СЂР° Kodi!!! ------------", "");
 						BufferedReader reader = new BufferedReader(new StringReader(cut_results));
-						// добавляем в content первую строку плейлиста с указанием провайдера
+						// РґРѕР±Р°РІР»СЏРµРј РІ content РїРµСЂРІСѓСЋ СЃС‚СЂРѕРєСѓ РїР»РµР№Р»РёСЃС‚Р° СЃ СѓРєР°Р·Р°РЅРёРµРј РїСЂРѕРІР°Р№РґРµСЂР°
 						String extm3u = String.format("#EXTM3U provider-name=\"%s\"\n", provider[i]);
 						content.append(extm3u);
 							  
-						// игнорируем первые две строки в cut_results. остальное записываем в content
+						// РёРіРЅРѕСЂРёСЂСѓРµРј РїРµСЂРІС‹Рµ РґРІРµ СЃС‚СЂРѕРєРё РІ cut_results. РѕСЃС‚Р°Р»СЊРЅРѕРµ Р·Р°РїРёСЃС‹РІР°РµРј РІ content
 						for (int j=0; (line = reader.readLine()) != null; ++j) {
 							if ((j!=0) && (j!=1)) {
 							    content.append(line);
@@ -238,7 +238,7 @@ public class RobotIptv {
 				  	    String plistM3u = content.toString();
 //				  	    System.out.print(plistM3u);
 
-			            // парсим плейлист, приведя его к виду stream
+			            // РїР°СЂСЃРёРј РїР»РµР№Р»РёСЃС‚, РїСЂРёРІРµРґСЏ РµРіРѕ Рє РІРёРґСѓ stream
 						InputStream stream = new ByteArrayInputStream(plistM3u.getBytes(StandardCharsets.UTF_8));
 						entries.addAll(new Parser().parse(stream));
 						
@@ -248,10 +248,10 @@ public class RobotIptv {
 					  System.out.println("Response from " + provider + " provider is empty");
 				  }
 			  }
-			// Информационное сообщение по завершении цикла с запросами по разным провайдерам  
+			// РРЅС„РѕСЂРјР°С†РёРѕРЅРЅРѕРµ СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ Р·Р°РІРµСЂС€РµРЅРёРё С†РёРєР»Р° СЃ Р·Р°РїСЂРѕСЃР°РјРё РїРѕ СЂР°Р·РЅС‹Рј РїСЂРѕРІР°Р№РґРµСЂР°Рј  
 			System.out.println();  
 			System.out.println("All requests to the database are made.");
-			// закрываем WebDriver
+			// Р·Р°РєСЂС‹РІР°РµРј WebDriver
 			driver.quit();
  
     	}
@@ -260,7 +260,7 @@ public class RobotIptv {
 			e.printStackTrace();
 		}
 
-    	// возвращаем результат
+    	// РІРѕР·РІСЂР°С‰Р°РµРј СЂРµР·СѓР»СЊС‚Р°С‚
     return entries;
   	
   }
