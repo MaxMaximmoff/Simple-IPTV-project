@@ -1,0 +1,49 @@
+#EXTM3U
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",EUROSPORT 1-3037
+http://5.128.182.86:81/udp/239.1.12.3:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",EUROSPORT 1 HD-3038
+http://5.128.182.86:81/udp/239.1.11.6:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",EUROSPORT 2-3039
+http://5.128.182.86:81/udp/239.1.12.4:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",VIASAT GOLF HD-3110
+http://5.128.182.86:81/udp/239.1.21.42:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",VIASAT SPORT HD-3115
+http://5.128.182.86:81/udp/239.1.21.41:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",БОКС ТВ-3126
+http://5.128.254.228:81/udp/239.1.20.24:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ИГРА HD-3155
+http://37.192.94.34:81/udp/239.1.21.58:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",КХЛ-3177
+http://37.192.145.48:81/udp/239.1.12.6:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",КХЛ HD-3179
+http://37.194.29.176:81/udp/239.1.18.3:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ!-3183
+http://5.128.254.228:81/udp/239.1.15.16:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! HD-3184
+http://5.128.254.228:81/udp/239.1.15.23:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! АРЕНА HD-3186
+http://proxytv.ru/iptv/img/notv.mp4
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! БОЕЦ-3187
+http://proxytv.ru/iptv/img/notv.mp4
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! НАШ СПОРТ-3190
+http://5.128.182.86:81/udp/239.1.12.12:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ПРЕМЬЕР HD-3191
+http://178.49.83.50:81/udp/239.1.16.1:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ПРЕМЬЕР-3192
+http://5.128.182.86:81/udp/239.1.20.11:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ФУТБОЛ 1 HD-3193
+http://37.192.94.34:81/udp/239.1.23.1:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ФУТБОЛ 2 HD-3194
+http://37.192.145.48:81/udp/239.1.23.2:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! ФУТБОЛ 3 HD-3195
+http://37.192.94.34:81/udp/239.1.23.3:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",ТЕЛЕКАНАЛ ФУТБОЛ-3265
+http://proxytv.ru/iptv/img/notv.mp4
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",КХЛ-24035
+http://proxytv.ru/iptv/img/notv.mp4
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ!-24036
+http://37.235.218.122:81/udp/225.50.66.91:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",МАТЧ! АРЕНА-24038
+http://37.235.218.201:81/udp/225.50.64.42:1234
+#EXTINF:-1 group-title="СПОРТИВНЫЕ",НАШ ФУТБОЛ-24047
+http://37.235.195.80:81/udp/225.50.67.1:1234
