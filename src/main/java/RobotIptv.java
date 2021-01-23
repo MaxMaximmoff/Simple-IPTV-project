@@ -84,6 +84,7 @@ public class RobotIptv {
 				// вызываем функцию для проверки потока каждого канала
 						String stream = entries.get(i).getChannelUri() + '\n';
 						createM3U.write(stream.getBytes()); 
+
 					}
 					createM3U.close();
 					System.out.println("Playlist formed");
@@ -240,7 +241,11 @@ public class RobotIptv {
 
 			            // парсим плейлист, приведя его к виду stream
 						InputStream stream = new ByteArrayInputStream(plistM3u.getBytes(StandardCharsets.UTF_8));
-						entries.addAll(new Parser().parse(stream));
+						
+						try {
+							entries.addAll(new Parser().parse(stream));
+						}
+						catch(ParsingException e) { e.printStackTrace();}
 						
 
 				  }

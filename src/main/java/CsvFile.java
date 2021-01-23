@@ -1,6 +1,6 @@
 /*
 * Created by Max Maximoff on 11/07/2020.
-* класс для работы с csv файлами
+* A class for working with csv files
 */
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,19 +24,15 @@ import com.opencsv.bean.StatefulBeanToCsv;
 public class CsvFile {
 	
 // поля класса CsvFile    
-	private char delimiter; // разделитель в csv файле
-    private String path;    // путь и имя csv файла
-    private File csvFile;   // абстрактное представление csv файла
-	private FileInputStream inputStream; // поток для чтения csv файла
-    private FileOutputStream outputStream; // поток для записи в csv файла
+	private char delimiter;                   // A delimiter in a csv file
+    private File csvFile;                     // An abstract representation of a csv file
+	private FileInputStream inputStream;      // A stream for reading a csv file
+    private FileOutputStream outputStream;    // A stream to write to a csv file
     
-// конструктор класса CsvFile
-    public CsvFile(String path, char delimiter) {
-        this.path = path;
-        this.delimiter = delimiter;
-    }	
-// метод для запуска конструктора класса File и для создания csv файла    
-   public void initCsv() throws IOException, NullPointerException {
+//  CsvFile class constructor
+   public CsvFile(String path, char delimiter) throws IOException, NullPointerException {
+
+       this.delimiter = delimiter;
 	   try { 
 		   csvFile = new File(path);
 		}
@@ -55,7 +51,7 @@ public class CsvFile {
 	    } 
     }
 
-// метод для чтения данных из csv файла в bean
+// method for reading data from a csv file to List<bean>
 	public List<Entry> readDataFromCSV() throws Exception 
 	{ 
 		
@@ -65,20 +61,20 @@ public class CsvFile {
 	    	inputStream = new FileInputStream(csvFile);
 	        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 	  
-	        // создание объекта csvParser с указанием разделителя delimiter
+	        // creating a CSVParser object with a delimiter
 	        CSVParser parser = new CSVParserBuilder().withSeparator(delimiter).build(); 
 	  
-	        // создание объекта csvReaderс параметрами filereader и parser
+	        // creating a CSVReader object with the filereader and parser parameters
 	        CSVReader csvReader = new CSVReaderBuilder(reader) 
 	                                  .withCSVParser(parser) 
 	                                  .build(); 
 	  
-	        // Читаем всю инфу из csv файла при помощи метода readAll()
+	        // read all the information from the csv file using the ReadAll() method
 	        List<String[]> allData = csvReader.readAll(); 
 
 	        Entry.Builder entry = null;
 	  
-		        // Добавляем данные из List в bean. 
+		        // Добавляем данные в bean. 
 		        for (String[] row : allData) { 
 		            for (int i=0;i<row.length;++i) { 
 		            	entry = new Entry.Builder()

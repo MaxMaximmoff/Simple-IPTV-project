@@ -20,10 +20,10 @@ public class Main {
 		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//имя файла плейлиста
 		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//имя csv файла 
 		final String DRIVERNAME = "./src/main/resources/BrowserDrivers"
-				+ "/Chrome/ChromeDriver 86.0.4240.22/chromedriver.exe";//ѕуть к ChromeDriver
+				+ "/Chrome/ChromeDriver 86.0.4240.22/chromedriver.exe";//путь к ChromeDriver
 		final char DELIMITER = ';'; // разделитель в csv файле
 		final int TIMEOUT = 3*1000;// 3 секунды
-		final int LENDATA = 8192; // длина буфера для проверки наличи¤ потока
+		final int LENDATA = 8192; // длина буфера для проверки наличия потока
 		final int MAXATTEMPT = 3; //  к-во попыток для проверки
 		
 
@@ -61,9 +61,6 @@ public class Main {
 			  
 			  // конструктор для класска CsvFile
 			  CsvFile newCsvFile = new CsvFile(CSVNAMEFILE, DELIMITER);
-			  
-			  // проверка наличия файла csv. создаем если его нет
-			   newCsvFile.initCsv();
 			  
 			  // пишем данные в csv
 			   newCsvFile.writePlistToCSV(entries);
