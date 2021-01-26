@@ -1,3 +1,4 @@
+package com.meMaxMaximmoff.executabe;
 /*
 * Created by Max Maximoff on 11/07/2020.
 * A class for working with csv files

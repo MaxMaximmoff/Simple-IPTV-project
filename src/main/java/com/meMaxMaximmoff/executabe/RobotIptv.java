@@ -1,3 +1,4 @@
+package com.meMaxMaximmoff.executabe;
 /*
  * Created by Max Maximoff on 11/07/2020.
  * Создание плейлиста с проверкой и повторными подключениями в случае неудачи

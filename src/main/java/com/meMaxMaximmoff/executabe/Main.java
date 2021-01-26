@@ -1,4 +1,5 @@
-﻿/*
+﻿package com.meMaxMaximmoff.executabe;
+/*
  * Скрипт для создания плейлистов m3u
  * на основе данных полученных с сайта http://proxytv.ru/
  * Демонстрация создания таких плейлистов путем чтения данных из csv файла
@@ -25,6 +26,7 @@ public class Main {
 		final int TIMEOUT = 3*1000;// 3 секунды
 		final int LENDATA = 8192; // длина буфера для проверки наличия потока
 		final int MAXATTEMPT = 3; //  к-во попыток для проверки
+		final String tableName = "plists";
 		
 
         // строка со списком всех провайдеров		
@@ -48,10 +50,10 @@ public class Main {
 			  SqlBase newSqlBase = new SqlBase();		  
 			  
 			  // удаляем все записи в таблице базы // 
-			  newSqlBase.deleteAllPlistsInBase();
+			  newSqlBase.deleteAllPlistsInBase(tableName);
 			  
 			  // добавляем данные о каналах в базу 
-			  newSqlBase.addPlistToBase(entries);
+			  newSqlBase.addPlistToBase(entries, tableName);
 			  
 			  // SQL запрос из базы для провайдера Novotel
 			  String query1 = "SELECT * FROM plists WHERE providerName = 'Novotel' ";
