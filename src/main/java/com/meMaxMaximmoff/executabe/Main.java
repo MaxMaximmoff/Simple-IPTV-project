@@ -21,7 +21,7 @@ public class Main {
 		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//имя файла плейлиста
 		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//имя csv файла 
 		final String DRIVERNAME = "./src/main/resources/BrowserDrivers"
-				+ "/Chrome/ChromeDriver 86.0.4240.22/chromedriver.exe";//путь к ChromeDriver
+				+ "/Chrome/ChromeDriver 88.0.4324.96/chromedriver.exe";//путь к ChromeDriver
 		final char DELIMITER = ';'; // разделитель в csv файле
 		final int TIMEOUT = 3*1000;// 3 секунды
 		final int LENDATA = 8192; // длина буфера для проверки наличия потока
@@ -30,7 +30,7 @@ public class Main {
 		
 
         // строка со списком всех провайдеров		
-		final String allProviders = "Aist,Bes,Elite,Lada,Optik,Lanta,Novotel,"
+		final String allProviders = "Aist,Elite,Lada,Optik,Lanta,Novotel,"
 				+ "Perspektiv,Post,Redkom,RostNSK,Skaynet,Citilink,Tenet,Tauer,Zapsib,Utelekom,Corbina,Yarnet";
 		
 		
@@ -47,7 +47,9 @@ public class Main {
 			  
 			  
 			  // конструктор класса  SqlBase
-			  SqlBase newSqlBase = new SqlBase();		  
+			  SqlBase newSqlBase = new SqlBase();
+			  
+			  newSqlBase.createConnection();
 			  
 			  // удаляем все записи в таблице базы // 
 			  newSqlBase.deleteAllPlistsInBase(tableName);

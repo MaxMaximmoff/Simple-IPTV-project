@@ -83,7 +83,7 @@ public class CsvFile {
 		            			.channelName(row[1])
 		            			.groupTitle(row[2])
 		            			.channelUri(row[3])
-		            			.providerName(row[3]);
+		            			.providerName(row[4]);
 		            	
 		            } 
 		            entries.add(entry.build());

@@ -41,7 +41,7 @@ public class RobotIptv {
         this.maxAttemt = maxAttemt;
     }
     
-// Метод для создания плейлиста из bean с проверкой на proxytv.ru    
+// Метод для создания плейлиста из листа bean с проверкой на proxytv.ru    
 	public void createM3uCheck (List<Entry> entries) throws Exception{
 
 		try {
