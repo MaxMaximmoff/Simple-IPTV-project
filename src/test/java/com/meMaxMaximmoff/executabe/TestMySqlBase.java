@@ -16,7 +16,7 @@ import java.util.List;
 import org.junit.Test;
 
 
-public class TestSqlBase {
+public class TestMySqlBase {
 	
 	   
 	   final String database_url = "jdbc:mysql://localhost/plistsDB";  // Default atabase address
@@ -28,11 +28,11 @@ public class TestSqlBase {
 	   @Test
 	   public void testConstructor() throws Exception {
 
-		   SqlBase sqlBase = new SqlBase();
+		   MySqlBase mySqlBase = new MySqlBase();
 
-		   Field field_database_url = sqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = sqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = sqlBase.getClass().getDeclaredField("user_password");
+		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
+		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
+		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
 
 		   //System.out.println(field_database_url.getName());
 
@@ -43,9 +43,9 @@ public class TestSqlBase {
 		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
 		   //System.out.println(obj_database_url);
 
-		   assertEquals(database_url, field_database_url.get(sqlBase));
-		   assertEquals(user_login, field_user_login.get(sqlBase));
-		   assertEquals(user_password, field_user_password.get(sqlBase));
+		   assertEquals(database_url, field_database_url.get(mySqlBase));
+		   assertEquals(user_login, field_user_login.get(mySqlBase));
+		   assertEquals(user_password, field_user_password.get(mySqlBase));
 
 	   }	   
 
@@ -58,11 +58,11 @@ public class TestSqlBase {
 		   String some_user_login = "login";                            // Some database login
 		   String some_user_password = "123";                           // Some database password
 
-		   SqlBase sqlBase = new SqlBase(some_database_url, some_user_login, some_user_password);
+		   MySqlBase mySqlBase = new MySqlBase(some_database_url, some_user_login, some_user_password);
 
-		   Field field_database_url = sqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = sqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = sqlBase.getClass().getDeclaredField("user_password");
+		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
+		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
+		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
 
 		   //System.out.println(field_database_url.getName());
 
@@ -73,9 +73,9 @@ public class TestSqlBase {
 		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
 		   //System.out.println(obj_database_url);
 
-		   assertEquals(some_database_url, field_database_url.get(sqlBase));
-		   assertEquals(some_user_login, field_user_login.get(sqlBase));
-		   assertEquals(some_user_password, field_user_password.get(sqlBase));
+		   assertEquals(some_database_url, field_database_url.get(mySqlBase));
+		   assertEquals(some_user_login, field_user_login.get(mySqlBase));
+		   assertEquals(some_user_password, field_user_password.get(mySqlBase));
 
 	   }
 	   	   
@@ -84,9 +84,9 @@ public class TestSqlBase {
 	   @Test
 	   public void testCreateConnection() throws Exception {
 
-		   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 		   
-		   Connection conn = sqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection();
 		   
 		   assertFalse(conn.isClosed());
 		   
@@ -97,11 +97,11 @@ public class TestSqlBase {
 	   @Test
 	   public void testCloseConnection() throws Exception {
 
-		   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 		   
-		   Connection conn = sqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection();
 		   
-		   sqlBase.closeConnection(conn);
+		   mySqlBase.closeAll();
 		   
 		   assertTrue(conn.isClosed());
 
@@ -112,7 +112,7 @@ public class TestSqlBase {
 	   public void testCreateAndDeleteNewTable() throws Exception {
 
 		   String tableName = "temp";
-		   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 		   boolean db_exist = false;
 		   boolean tvchId_exist = false;
 		   boolean channelName_exist = false;
@@ -120,9 +120,9 @@ public class TestSqlBase {
 		   boolean channelUri_exist = false;
 		   boolean providerName_exist = false;
 		   
-		   Connection conn = sqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection();
 		   
-		   sqlBase.createNewTableIfNoExists(tableName);
+		   mySqlBase.createNewTableIfNoExists(tableName);
 		   
 		   DatabaseMetaData md = conn.getMetaData();
 
@@ -156,7 +156,7 @@ public class TestSqlBase {
 
 		   assertTrue(db_ok);
 		   
-		   sqlBase.deleteTableIfExists(tableName);
+		   mySqlBase.deleteTableIfExists(tableName);
 		   
 		   rs = md.getTables(null, null, tableName, null);
 		   if (!rs.next()) {
@@ -165,6 +165,7 @@ public class TestSqlBase {
 		   }
 		   
 		   assertFalse(db_exist);
+		   
 
 	   }
 	   
@@ -190,16 +191,16 @@ public class TestSqlBase {
 			   }  
 
 			   // connecting to the database
-			   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = sqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   sqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   sqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   sqlBase.addPlistToBase (expected_entries, tableName);
+			   mySqlBase.addPlistToBase (expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -237,7 +238,7 @@ public class TestSqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   sqlBase.deleteTableIfExists(tableName); 
+			   mySqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
 		   } 
 		   catch (Exception e) { 
@@ -269,16 +270,16 @@ public class TestSqlBase {
 			   }  
 
 			   // connecting to the database
-			   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = sqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   sqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   sqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   sqlBase.addPlistToBase (entries, tableName);
+			   mySqlBase.addPlistToBase (entries, tableName);
 			   // preparing updated data			   
 			   for (int i=0; i <2; ++i) { 
 				   Entry.Builder expected_entry = new Entry.Builder()
@@ -291,7 +292,7 @@ public class TestSqlBase {
 				   expected_entries.add(expected_entry.build());
 			   } 			   
 			   // updating using method updatePlistToBase()
-			   sqlBase.updateBasePlist(expected_entries, tableName);
+			   mySqlBase.updateBasePlist(expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -329,7 +330,7 @@ public class TestSqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   sqlBase.deleteTableIfExists(tableName); 
+			   mySqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
 
 		   } 
@@ -360,20 +361,20 @@ public class TestSqlBase {
 			   }  
 
 			   // connecting to the database
-			   SqlBase sqlBase = new SqlBase(database_url, user_login, user_password);
+			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = sqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   sqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   sqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   sqlBase.addPlistToBase (expected_entries, tableName);
+			   mySqlBase.addPlistToBase (expected_entries, tableName);
 			   
 			   // reading the entire table using readDataFromBase(query)
 			   String query = String.format("SELECT * FROM %s", tableName);
-			   List <Entry> received_entries = sqlBase.readDataFromBase(query);
+			   List <Entry> received_entries = mySqlBase.readDataFromBase(query);
 			   
 			   // compare the results obtained from the table with the sent ones (they must be the same)
 			   for (int i=0; i <2; ++i) { 
@@ -392,7 +393,7 @@ public class TestSqlBase {
 			   }
 
 			   // deleting the temporary table
-			   sqlBase.deleteTableIfExists(tableName); 
+			   mySqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
 
 		   } 

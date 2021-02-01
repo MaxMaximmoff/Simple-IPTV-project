@@ -34,6 +34,7 @@ public class Main {
 				+ "Perspektiv,Post,Redkom,RostNSK,Skaynet,Citilink,Tenet,Tauer,Zapsib,Utelekom,Corbina,Yarnet";
 		
 		
+		
 		  try {
 		  
 			  // список bean куда будем сохранять данные о каналах  
@@ -47,21 +48,21 @@ public class Main {
 			  
 			  
 			  // конструктор класса  SqlBase
-			  SqlBase newSqlBase = new SqlBase();
+			  MySqlBase mySqlBase = new MySqlBase();
 			  
-			  newSqlBase.createConnection();
+			  mySqlBase.createConnection();
 			  
 			  // удаляем все записи в таблице базы // 
-			  newSqlBase.deleteAllPlistsInBase(tableName);
+			  mySqlBase.deleteAllPlistsInBase(tableName);
 			  
 			  // добавляем данные о каналах в базу 
-			  newSqlBase.addPlistToBase(entries, tableName);
+			  mySqlBase.addPlistToBase(entries, tableName);
 			  
 			  // SQL запрос из базы для провайдера Novotel
 			  String query1 = "SELECT * FROM plists WHERE providerName = 'Novotel' ";
 			  
 			  // получаем данные по SQL запросу
-			  entries = newSqlBase.readDataFromBase(query1);
+			  entries = mySqlBase.readDataFromBase(query1);
 			  
 			  // конструктор для класска CsvFile
 			  CsvFile newCsvFile = new CsvFile(CSVNAMEFILE, DELIMITER);
@@ -86,7 +87,7 @@ public class Main {
 			   String query2 = "SELECT * FROM plists WHERE (providerName = 'Novotel' OR providerName = 'Lanta') AND groupTitle = 'СПОРТИВНЫЕ'"; 
 			   
 			   // получаем данные по SQL запросу
-			   entries = newSqlBase.readDataFromBase(query2);
+			   entries = mySqlBase.readDataFromBase(query2);
 			   
 			   // создаем m3u на основе данных из базы с проверкой и заменой при необходимости потока
 			   robotIptv3.createM3uCheck(entries);
