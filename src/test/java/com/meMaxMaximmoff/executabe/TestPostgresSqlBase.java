@@ -1,16 +1,11 @@
 package com.meMaxMaximmoff.executabe;
-
 /*
  * Created by Max Maximoff on 02/01/2021.
  * 
- * Tests for testing MySqlBase class
+ * Tests for testing PostgresSqlBase class
  * 
 */
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import static org.junit.Assert.*;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -22,40 +17,36 @@ import java.util.List;
 
 import org.junit.Test;
 
-
-public class TestMySqlBase {
+public class TestPostgresSqlBase {
 	
-	   
-	   final String database_url = "jdbc:mysql://localhost/plistsDB";  // Default atabase address
-	   final String user_login = "user_login";                         // Default atabase login
-	   final String user_password = "password";                        // Default atabase password
-	   
+	final String database_url = "jdbc:postgresql://192.168.1.41:5432/mydb";  // Default database address 
+	final String user_login = "myuser"; 						// Default user login
+	final String user_password = "123"; 						// Default database password
+
 
 	   // Testing a default constructor using Java Reflection
 	   @Test
 	   public void testConstructor() throws Exception {
 
-		   MySqlBase mySqlBase = new MySqlBase();
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase();
+		   
+           // getting the values of the parameters that are initialized by the constructor
+		   Field field_database_url = postgreSqlBase.getClass().getDeclaredField("database_url");
+		   Field field_user_login = postgreSqlBase.getClass().getDeclaredField("user_login");
+		   Field field_user_password = postgreSqlBase.getClass().getDeclaredField("user_password");
 
-		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
-
-		   //System.out.println(field_database_url.getName());
-
+           // setting the accessibility values for these parameters
 		   field_database_url.setAccessible(true);
 		   field_user_login.setAccessible(true);
 		   field_user_password.setAccessible(true);
 
-		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
-		   //System.out.println(obj_database_url);
+           // comparing the obtained values with the required ones
+		   assertEquals(database_url, field_database_url.get(postgreSqlBase));
+		   assertEquals(user_login, field_user_login.get(postgreSqlBase));
+		   assertEquals(user_password, field_user_password.get(postgreSqlBase));
 
-		   assertEquals(database_url, field_database_url.get(mySqlBase));
-		   assertEquals(user_login, field_user_login.get(mySqlBase));
-		   assertEquals(user_password, field_user_password.get(mySqlBase));
-
-	   }	   
-
+	   }	
+	   
 	   // Testing a parameterized constructor using Java Reflection
 	   @Test
 	   public void testParamConstructor() throws Exception {
@@ -65,61 +56,70 @@ public class TestMySqlBase {
 		   String some_user_login = "login";                            // Some database login
 		   String some_user_password = "123";                           // Some database password
 
-		   MySqlBase mySqlBase = new MySqlBase(some_database_url, some_user_login, some_user_password);
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(some_database_url, some_user_login, some_user_password);
 
-		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
+           // getting the values of the parameters that are initialized by the constructor
+		   Field field_database_url = postgreSqlBase.getClass().getDeclaredField("database_url");
+		   Field field_user_login = postgreSqlBase.getClass().getDeclaredField("user_login");
+		   Field field_user_password = postgreSqlBase.getClass().getDeclaredField("user_password");
 
-		   //System.out.println(field_database_url.getName());
-
+           // setting the accessibility values for these parameters
 		   field_database_url.setAccessible(true);
 		   field_user_login.setAccessible(true);
 		   field_user_password.setAccessible(true);
 
-		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
-		   //System.out.println(obj_database_url);
-
-		   assertEquals(some_database_url, field_database_url.get(mySqlBase));
-		   assertEquals(some_user_login, field_user_login.get(mySqlBase));
-		   assertEquals(some_user_password, field_user_password.get(mySqlBase));
+           // comparing the obtained values with the required ones
+		   assertEquals(some_database_url, field_database_url.get(postgreSqlBase));
+		   assertEquals(some_user_login, field_user_login.get(postgreSqlBase));
+		   assertEquals(some_user_password, field_user_password.get(postgreSqlBase));
 
 	   }
-	   	   
-	   
-	   // Testing createConnection() method
+	
+	// Testing createConnection() method
 	   @Test
 	   public void testCreateConnection() throws Exception {
 
-		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase();
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = postgreSqlBase.createConnection();
 		   
 		   assertFalse(conn.isClosed());
 		   
 	   }
 	   
+	   // Testing createConnection() method
+	   @Test
+	   public void testCreateConn() throws Exception {
 
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
+		   
+		   Connection conn = postgreSqlBase.createConnection();
+		   
+		   assertFalse(conn.isClosed());
+		   
+	   }
+	   
 	   // Testing closeConnection() method
 	   @Test
 	   public void testCloseConnection() throws Exception {
 
-		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = postgreSqlBase.createConnection();
 		   
-		   mySqlBase.closeAll();
+		   postgreSqlBase.closeAll();
 		   
 		   assertTrue(conn.isClosed());
 
 	   }	
+	   
 
 	   // Testing createNewTable() and deleteTable() methods
 	   @Test
 	   public void testCreateAndDeleteNewTable() throws Exception {
 
 		   String tableName = "temp";
-		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
 		   boolean db_exist = false;
 		   boolean tvchId_exist = false;
 		   boolean channelName_exist = false;
@@ -127,9 +127,9 @@ public class TestMySqlBase {
 		   boolean channelUri_exist = false;
 		   boolean providerName_exist = false;
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = postgreSqlBase.createConnection();
 		   
-		   mySqlBase.createNewTableIfNoExists(tableName);
+		   postgreSqlBase.createNewTableIfNoExists(tableName);
 		   
 		   DatabaseMetaData md = conn.getMetaData();
 
@@ -163,7 +163,7 @@ public class TestMySqlBase {
 
 		   assertTrue(db_ok);
 		   
-		   mySqlBase.deleteTableIfExists(tableName);
+		   postgreSqlBase.deleteTableIfExists(tableName);
 		   
 		   rs = md.getTables(null, null, tableName, null);
 		   if (!rs.next()) {
@@ -175,6 +175,20 @@ public class TestMySqlBase {
 		   
 
 	   }
+	   
+	   // Testing deleteTable() methods
+	   @Test
+	   public void testDeleteNewTable() throws Exception {
+
+		   String tableName = "temp";
+		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
+	
+		   
+		   postgreSqlBase.createConnection();
+		   postgreSqlBase.deleteTableIfExists(tableName);
+		   
+	   }
+	   
 	   
 	   // Testing addPlistToBase() method
 	   @Test
@@ -198,16 +212,16 @@ public class TestMySqlBase {
 			   }  
 
 			   // connecting to the database
-			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+			   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = postgreSqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   postgreSqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   postgreSqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (expected_entries, tableName);
+			   postgreSqlBase.addPlistToBase (expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -219,7 +233,7 @@ public class TestMySqlBase {
 			   // querying the database on request and write the data to List<Entry> received_entries
 			   for (int i=0; i <2; ++i) {
 
-				   String query = String.format("SELECT * FROM %s WHERE tvchId = %s",
+				   String query = String.format("SELECT * FROM %s WHERE \"tvchId\" = %s",
 						                                 tableName, Integer.parseInt(expected_entries.get(i).getTvchId()));
 
 				   // Preparing a ResultSet that depends on the query
@@ -245,15 +259,15 @@ public class TestMySqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
+			   postgreSqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
+
 		   } 
 		   catch (Exception e) { 
 			   e.printStackTrace(); 
 		   } 
 
-	   }	
-
+	   }
 	   
 	   // Testing updatePlistToBase() method
 	   @Test
@@ -277,16 +291,16 @@ public class TestMySqlBase {
 			   }  
 
 			   // connecting to the database
-			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+			   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = postgreSqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   postgreSqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   postgreSqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (entries, tableName);
+			   postgreSqlBase.addPlistToBase (entries, tableName);
 			   // preparing updated data			   
 			   for (int i=0; i <2; ++i) { 
 				   Entry.Builder expected_entry = new Entry.Builder()
@@ -299,7 +313,7 @@ public class TestMySqlBase {
 				   expected_entries.add(expected_entry.build());
 			   } 			   
 			   // updating using method updatePlistToBase()
-			   mySqlBase.updateBasePlist(expected_entries, tableName);
+			   postgreSqlBase.updateBasePlist(expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -311,7 +325,7 @@ public class TestMySqlBase {
 			   // querying the database on request and write the data to List<Entry> received_entries
 			   for (int i=0; i <2; ++i) {
 
-				   String query = String.format("SELECT * FROM %s WHERE tvchId = %s",
+				   String query = String.format("SELECT * FROM %s WHERE \"tvchId\" = %s",
 						                                 tableName, Integer.parseInt(expected_entries.get(i).getTvchId()));
 
 				   // Preparing a ResultSet that depends on the query
@@ -337,7 +351,7 @@ public class TestMySqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
+			   postgreSqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
 
 		   } 
@@ -345,7 +359,7 @@ public class TestMySqlBase {
 			   e.printStackTrace(); 
 		   } 
 
-	   }	
+	   }
 	   
 	   // Testing readDataFromBase (String query) method
 	   @Test
@@ -368,20 +382,20 @@ public class TestMySqlBase {
 			   }  
 
 			   // connecting to the database
-			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+			   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = postgreSqlBase.createConnection();
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   postgreSqlBase.deleteTableIfExists(tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   postgreSqlBase.createNewTableIfNoExists(tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (expected_entries, tableName);
+			   postgreSqlBase.addPlistToBase (expected_entries, tableName);
 			   
 			   // reading the entire table using readDataFromBase(query)
 			   String query = String.format("SELECT * FROM %s", tableName);
-			   List <Entry> received_entries = mySqlBase.readDataFromBase(query);
+			   List <Entry> received_entries = postgreSqlBase.readDataFromBase(query);
 			   
 			   // compare the results obtained from the table with the sent ones (they must be the same)
 			   for (int i=0; i <2; ++i) { 
@@ -400,7 +414,7 @@ public class TestMySqlBase {
 			   }
 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
+			   postgreSqlBase.deleteTableIfExists(tableName); 
 			   conn.close();
 
 		   } 

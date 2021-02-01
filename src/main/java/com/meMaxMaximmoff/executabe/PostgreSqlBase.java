@@ -1,8 +1,8 @@
 package com.meMaxMaximmoff.executabe;
 
 /*
- * Created by Max Maximoff on 11/07/2020.
- * Class for working with playlist tables in the MySQL database
+ * Created by Max Maximoff on 02/01/2021.
+ * Class for working with playlist tables in the PostgreSql database
  */
 import java.sql.Connection;
 import java.sql.Statement;

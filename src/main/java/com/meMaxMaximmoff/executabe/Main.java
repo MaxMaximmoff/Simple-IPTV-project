@@ -1,11 +1,13 @@
 ﻿package com.meMaxMaximmoff.executabe;
 /*
- * Скрипт для создания плейлистов m3u
- * на основе данных полученных с сайта http://proxytv.ru/
- * Демонстрация создания таких плейлистов путем чтения данных из csv файла
- * и базы mySQL
+ * Created by Max Maximoff on 02/01/2021.
  * 
- * Полный список провайдеров на proxytv.ru :
+ * Script for creating m3u playlists
+ * based on the data received from the site http://proxytv.ru/
+ * Demonstration of creating such playlists by reading data from a csv file
+ * and MySQL databases
+ * 
+ * Full list of providers on proxytv.ru :
  * Optik Redkom Novotel Lada Zapsib Aist Tauer Elite RostNSK Bes Utelekom Post Lanta Perspektiv Corbina Citilink Yarnet Skaynet Tenet
 */
 
@@ -17,19 +19,19 @@ public class Main {
 
 	public static void main(String[] args) throws Exception{
 
-		final String M3UNAMEFILE1 = "./src/main/resources/plist_Novotel.m3u";//имя файла плейлиста
-		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//имя файла плейлиста
-		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//имя csv файла 
+		final String M3UNAMEFILE1 = "./src/main/resources/plist_Novotel.m3u";//playlist file name
+		final String M3UNAMEFILE2 = "./src/main/resources/plist_sport.m3u";//playlist file name
+		final String CSVNAMEFILE = "./src/main/resources/Novotel.csv";//csv file name
 		final String DRIVERNAME = "./src/main/resources/BrowserDrivers"
-				+ "/Chrome/ChromeDriver 88.0.4324.96/chromedriver.exe";//путь к ChromeDriver
-		final char DELIMITER = ';'; // разделитель в csv файле
-		final int TIMEOUT = 3*1000;// 3 секунды
-		final int LENDATA = 8192; // длина буфера для проверки наличия потока
-		final int MAXATTEMPT = 3; //  к-во попыток для проверки
+				+ "/Chrome/ChromeDriver 88.0.4324.96/chromedriver.exe";//path to ChromeDriver
+		final char DELIMITER = ';'; // delimiter in the csv file
+		final int TIMEOUT = 3*1000;// 3 seconds
+		final int LENDATA = 8192; // the length of the buffer to check for the presence of a stream
+		final int MAXATTEMPT = 3; //  number of attempts to check
 		final String tableName = "plists";
 		
 
-        // строка со списком всех провайдеров		
+        // a line with a list of all providers	
 		final String allProviders = "Aist,Elite,Lada,Optik,Lanta,Novotel,"
 				+ "Perspektiv,Post,Redkom,RostNSK,Skaynet,Citilink,Tenet,Tauer,Zapsib,Utelekom,Corbina,Yarnet";
 		
@@ -37,59 +39,59 @@ public class Main {
 		
 		  try {
 		  
-			  // список bean куда будем сохранять данные о каналах  
+			  // the list of beans where we will save data about channels
 			   List<Entry> entries =  new ArrayList<Entry>();
 			  
-			  // конструктор для класса RobotIptv
+			  // constructor for the RobotIptv class
 			   RobotIptv robotIptv1 = new RobotIptv();
 			  
-			  // парсим сайт http://proxytv.ru/ и записываем данные о каналах в список bean
+			  // parsing website http://proxytv.ru/ and write the channel data to the bean list
 			  entries = robotIptv1.getProviderPlist(allProviders, DRIVERNAME);
 			  
 			  
-			  // конструктор класса  SqlBase
+			  // constructor of the MySqlBase class
 			  MySqlBase mySqlBase = new MySqlBase();
 			  
 			  mySqlBase.createConnection();
 			  
-			  // удаляем все записи в таблице базы // 
+			  // deleting all entries in the database table
 			  mySqlBase.deleteAllPlistsInBase(tableName);
 			  
-			  // добавляем данные о каналах в базу 
+			  // adding data about channels to the database
 			  mySqlBase.addPlistToBase(entries, tableName);
 			  
-			  // SQL запрос из базы для провайдера Novotel
+			  // SQL query for the Novotel provider
 			  String query1 = "SELECT * FROM plists WHERE providerName = 'Novotel' ";
 			  
-			  // получаем данные по SQL запросу
+			  // getting data from an SQL query
 			  entries = mySqlBase.readDataFromBase(query1);
 			  
-			  // конструктор для класска CsvFile
+			  // constructor for the CsvFile class
 			  CsvFile newCsvFile = new CsvFile(CSVNAMEFILE, DELIMITER);
 			  
-			  // пишем данные в csv
+			  // writing data in csv
 			   newCsvFile.writePlistToCSV(entries);
 			   
-			  // конструктор для класса RobotIptv с указанием имени файла
+			  // constructor for the RobotIptv class with the file name specified
 			   RobotIptv robotIptv2 = new RobotIptv(M3UNAMEFILE1);	
 			   
-			  // читаем данные из csv
+			  // reading data from csv
 			   entries = newCsvFile.readDataFromCSV();
 			   
-			  // создаем m3u на основе данных из csv
+			  // creating an m3u based on data from csv
 			   robotIptv2.createM3uNoCheck(entries);
 
-			  // конструктор для класса RobotIptv с указанием имени файла, таймаута, длины проверочного буфера
-			  // и максимального к-ва попыток 
+			  // constructor for the RobotIptv class, specifying the file name, timeout, and length of the test buffer
+			  // and the maximum number of attempts
 			   RobotIptv robotIptv3 = new RobotIptv(M3UNAMEFILE2, TIMEOUT, LENDATA, MAXATTEMPT);	
 			   
-			   //   SQL запрос из базы для выбора каналов СПОРТИВНЫЕ
+			   // SQL query from the database for selecting channels СПОРТИВНЫЕ
 			   String query2 = "SELECT * FROM plists WHERE (providerName = 'Novotel' OR providerName = 'Lanta') AND groupTitle = 'СПОРТИВНЫЕ'"; 
 			   
-			   // получаем данные по SQL запросу
+			   // getting data from an SQL query
 			   entries = mySqlBase.readDataFromBase(query2);
 			   
-			   // создаем m3u на основе данных из базы с проверкой и заменой при необходимости потока
+			   // creating an m3u based on data from the database with checking and replacing the stream if necessary
 			   robotIptv3.createM3uCheck(entries);
 			   
 
