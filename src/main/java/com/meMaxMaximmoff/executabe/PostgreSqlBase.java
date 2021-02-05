@@ -126,7 +126,7 @@ public class PostgreSqlBase extends SqlBase{
 				System.out.println("Adding to the database failed!!!\nSuch records exists. You should use the update method");
 				//	e.printStackTrace();
 			}
-	}
+		}
 	}
 
 	//  Method for updating the plist in the database

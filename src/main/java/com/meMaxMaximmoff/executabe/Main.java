@@ -4,8 +4,8 @@
  * 
  * Script for creating m3u playlists
  * based on the data received from the site http://proxytv.ru/
- * Demonstration of creating such playlists by reading data from a csv file
- * and MySQL databases
+ * Demonstration of creating such playlists by reading data from a csv file, MySQL PostgreSQL and  databases
+ * 
  * 
  * Full list of providers on proxytv.ru :
  * Optik Redkom Novotel Lada Zapsib Aist Tauer Elite RostNSK Bes Utelekom Post Lanta Perspektiv Corbina Citilink Yarnet Skaynet Tenet
