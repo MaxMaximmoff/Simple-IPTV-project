@@ -20,6 +20,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -29,34 +30,10 @@ public class TestMySqlBase {
 	   final String database_url = "jdbc:mysql://localhost/plistsDB";  // Default atabase address
 	   final String user_login = "user_login";                         // Default atabase login
 	   final String user_password = "password";                        // Default atabase password
+	   final String mySqlDriver = "com.mysql.cj.jdbc.Driver";  // Driver MySQL
 	   
 
-	   // Testing a default constructor using Java Reflection
-	   @Test
-	   public void testConstructor() throws Exception {
-
-		   MySqlBase mySqlBase = new MySqlBase();
-
-		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
-
-		   //System.out.println(field_database_url.getName());
-
-		   field_database_url.setAccessible(true);
-		   field_user_login.setAccessible(true);
-		   field_user_password.setAccessible(true);
-
-		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
-		   //System.out.println(obj_database_url);
-
-		   assertEquals(database_url, field_database_url.get(mySqlBase));
-		   assertEquals(user_login, field_user_login.get(mySqlBase));
-		   assertEquals(user_password, field_user_password.get(mySqlBase));
-
-	   }	   
-
-	   // Testing a parameterized constructor using Java Reflection
+	   // Testing a constructor using Java Reflection
 	   @Test
 	   public void testParamConstructor() throws Exception {
 
@@ -67,18 +44,13 @@ public class TestMySqlBase {
 
 		   MySqlBase mySqlBase = new MySqlBase(some_database_url, some_user_login, some_user_password);
 
-		   Field field_database_url = mySqlBase.getClass().getDeclaredField("database_url");
-		   Field field_user_login = mySqlBase.getClass().getDeclaredField("user_login");
-		   Field field_user_password = mySqlBase.getClass().getDeclaredField("user_password");
-
-		   //System.out.println(field_database_url.getName());
+		   Field field_database_url = mySqlBase.getClass().getSuperclass().getDeclaredField("database_url");
+		   Field field_user_login = mySqlBase.getClass().getSuperclass().getDeclaredField("user_login");
+		   Field field_user_password = mySqlBase.getClass().getSuperclass().getDeclaredField("user_password");
 
 		   field_database_url.setAccessible(true);
 		   field_user_login.setAccessible(true);
 		   field_user_password.setAccessible(true);
-
-		   //String obj_database_url = (String) field_database_url.get(sqlBase); //IllegalAccessException
-		   //System.out.println(obj_database_url);
 
 		   assertEquals(some_database_url, field_database_url.get(mySqlBase));
 		   assertEquals(some_user_login, field_user_login.get(mySqlBase));
@@ -86,35 +58,76 @@ public class TestMySqlBase {
 
 	   }
 	   	   
-	   
-	   // Testing createConnection() method
+	   // Testing createConnection(String driver) method
 	   @Test
 	   public void testCreateConnection() throws Exception {
-
+		   
 		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection(mySqlDriver);
 		   
 		   assertFalse(conn.isClosed());
 		   
 	   }
 	   
+	   // Testing setDatabaseUrl( String database_url ) and getDatabaseUrl() methods
+	   @Test
+	   public void testSetGetDatabaseUrl() throws Exception {
 
-	   // Testing closeConnection() method
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   
+		   String new_database_url = "jdbc:mysql://127.0.0.1/plistsDB";
+		   
+		   mySqlBase.setDatabaseUrl(new_database_url);
+		   
+ 		   assertTrue(new_database_url==mySqlBase.getDatabaseUrl());
+
+	   }
+	   
+	   // Testing setUserLogin( String database_url ) and getUserLogin() methods
+	   @Test
+	   public void testSetGetUserLogin() throws Exception {
+
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   
+		   String new_user_login = "new_user_login";
+		   
+		   mySqlBase.setUserLogin(new_user_login);
+		   
+ 		   assertTrue(new_user_login==mySqlBase.getUserLogin());
+
+	   }
+	   
+	   // Testing setUserPassword( String database_url ) and getUserPassword() methods
+	   @Test
+	   public void testSetGetUserPassword() throws Exception {
+
+		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+		   
+		   String new_user_password = "new_password";
+		   
+		   mySqlBase.setUserPassword(new_user_password);
+		   
+ 		   assertTrue(new_user_password==mySqlBase.getUserPassword());
+
+	   }	   
+	   
+	   // Testing closeConnection(Connection connection) method
 	   @Test
 	   public void testCloseConnection() throws Exception {
 
 		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection(mySqlDriver);
 		   
-		   mySqlBase.closeAll();
+		   mySqlBase.closeConnection(conn);
 		   
 		   assertTrue(conn.isClosed());
 
-	   }	
-
-	   // Testing createNewTable() and deleteTable() methods
+	   }
+	   
+	   // Testing createNewTableIfNoExists(Connection connection, String tableName)
+	   // and deleteTableIfExists(Connection connection, String tableName) methods
 	   @Test
 	   public void testCreateAndDeleteNewTable() throws Exception {
 
@@ -127,9 +140,9 @@ public class TestMySqlBase {
 		   boolean channelUri_exist = false;
 		   boolean providerName_exist = false;
 		   
-		   Connection conn = mySqlBase.createConnection();
+		   Connection conn = mySqlBase.createConnection(mySqlDriver);
 		   
-		   mySqlBase.createNewTableIfNoExists(tableName);
+		   mySqlBase.createNewTableIfNoExists(conn, tableName);
 		   
 		   DatabaseMetaData md = conn.getMetaData();
 
@@ -163,7 +176,7 @@ public class TestMySqlBase {
 
 		   assertTrue(db_ok);
 		   
-		   mySqlBase.deleteTableIfExists(tableName);
+		   mySqlBase.deleteTableIfExists(conn, tableName);
 		   
 		   rs = md.getTables(null, null, tableName, null);
 		   if (!rs.next()) {
@@ -172,13 +185,12 @@ public class TestMySqlBase {
 		   }
 		   
 		   assertFalse(db_exist);
-		   
 
 	   }
 	   
-	   // Testing addPlistToBase() method
+	   // Testing addPlistToBaseTable(Connection connection, List<Entry> entries, String tableName) method
 	   @Test
-	   public void testAddPlistToBase() throws Exception {
+	   public void testAddPlistToBaseTable() throws Exception {
 
 		   String tableName = "temp"; // temporary table name
 		   List <Entry> expected_entries = new ArrayList <Entry> (); // place to store data
@@ -200,14 +212,14 @@ public class TestMySqlBase {
 			   // connecting to the database
 			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection(mySqlDriver);
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(conn, tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(conn, tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (expected_entries, tableName);
+			   mySqlBase.addPlistToBaseTable (conn, expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -245,17 +257,16 @@ public class TestMySqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
-			   conn.close();
+			   mySqlBase.deleteTableIfExists(conn, tableName); 
+
 		   } 
 		   catch (Exception e) { 
 			   e.printStackTrace(); 
 		   } 
 
-	   }	
-
+	   }
 	   
-	   // Testing updatePlistToBase() method
+	   // Testing updatePlistInBaseTable(Connection connection, List<Entry> entries, String tableName) method
 	   @Test
 	   public void testUpdatePlistToBase() throws Exception {
 
@@ -279,14 +290,14 @@ public class TestMySqlBase {
 			   // connecting to the database
 			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection(mySqlDriver);
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(conn, tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(conn, tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (entries, tableName);
+			   mySqlBase.addPlistToBaseTable(conn, entries, tableName);
 			   // preparing updated data			   
 			   for (int i=0; i <2; ++i) { 
 				   Entry.Builder expected_entry = new Entry.Builder()
@@ -299,7 +310,7 @@ public class TestMySqlBase {
 				   expected_entries.add(expected_entry.build());
 			   } 			   
 			   // updating using method updatePlistToBase()
-			   mySqlBase.updateBasePlist(expected_entries, tableName);
+			   mySqlBase.updatePlistInBaseTable(conn, expected_entries, tableName);
 			   // place to receive data from the table
 			   List<Entry> received_entries = new ArrayList<Entry>();
 
@@ -337,26 +348,27 @@ public class TestMySqlBase {
 
 			   } 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
-			   conn.close();
+			   mySqlBase.deleteTableIfExists(conn, tableName); 
 
 		   } 
 		   catch (Exception e) { 
 			   e.printStackTrace(); 
 		   } 
 
-	   }	
+	   }
 	   
-	   // Testing readDataFromBase (String query) method
+	   // Testing readDataFromBaseTable(Connection connection, String tableName, String query) method
 	   @Test
 	   public void testReadDataFromBase() throws Exception {
 
 		   String tableName = "temp"; // temporary table name
 		   List <Entry> expected_entries = new ArrayList <Entry> (); // place to store data
+		   // number of rows in the table
+		   int rowsNumber = 3;
 		   try { 
 
 			   // Adding random data to the List <Entry> expected_entries
-			   for (int i=0; i <2; ++i) { 
+			   for (int i=0; i <rowsNumber; ++i) { 
 				   Entry.Builder  entry = new Entry.Builder()
 						   .tvchId(RandomString.getRandomIntString(5))
 						   .channelName(RandomString.getRandomString(45-1))
@@ -370,22 +382,22 @@ public class TestMySqlBase {
 			   // connecting to the database
 			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
 
-			   Connection conn = mySqlBase.createConnection();
+			   Connection conn = mySqlBase.createConnection(mySqlDriver);
 			   
 			   // deleting the temporary table if it exists
-			   mySqlBase.deleteTableIfExists(tableName);
+			   mySqlBase.deleteTableIfExists(conn, tableName);
 			   // creating a new temporary table
-			   mySqlBase.createNewTableIfNoExists(tableName);
+			   mySqlBase.createNewTableIfNoExists(conn, tableName);
 			   // writing prepared random data to the table
-			   mySqlBase.addPlistToBase (expected_entries, tableName);
+			   mySqlBase.addPlistToBaseTable(conn, expected_entries, tableName);
 			   
 			   // reading the entire table using readDataFromBase(query)
 			   String query = String.format("SELECT * FROM %s", tableName);
-			   List <Entry> received_entries = mySqlBase.readDataFromBase(query);
+			   List <Entry> received_entries = mySqlBase.readDataFromBaseTable(conn, tableName, query);
 			   
 			   // compare the results obtained from the table with the sent ones (they must be the same)
-			   for (int i=0; i <2; ++i) { 
-				   for (int j=0; j <2; ++j) {
+			   for (int i=0; i <rowsNumber; ++i) { 
+				   for (int j=0; j <rowsNumber; ++j) {
 					   if(expected_entries.get(i).getTvchId()==received_entries.get(j).getTvchId()) {
 						   
 						   assertEquals((expected_entries.get(i).getChannelName()), (received_entries.get(j).getChannelName()));
@@ -400,14 +412,56 @@ public class TestMySqlBase {
 			   }
 
 			   // deleting the temporary table
-			   mySqlBase.deleteTableIfExists(tableName); 
-			   conn.close();
+			   mySqlBase.deleteTableIfExists(conn, tableName); 
 
 		   } 
 		   catch (Exception e) { 
 			   e.printStackTrace(); 
 		   } 
 
-	   }	
+	   }
+	   
+	   // Testing addPlistToBaseTable(Connection connection, List<Entry> entries, String tableName) method
+	   @Ignore
+	   @Test
+	   public void testAddPlistToBaseTable2() throws Exception {
+
+		   String tableName = "temp"; // temporary table name
+		   List <Entry> expected_entries = new ArrayList <Entry> (); // place to store data
+		   try { 
+			   Entry.Builder entry = null;
+
+			   // Adding random data to the List <Entry> expected_entries
+			   for (int i=0; i <2; ++i) { 
+				   entry = new Entry.Builder()
+						   .tvchId(RandomString.getRandomIntString(5))
+						   .channelName(RandomString.getRandomString(45-1))
+						   .groupTitle(RandomString.getRandomString(45-1))
+						   .channelUri(RandomString.getRandomString(65-1))
+						   .providerName(RandomString.getRandomString(45-1));
+
+				   expected_entries.add(entry.build());
+			   }  
+
+			   // connecting to the database
+			   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
+
+			   Connection conn = mySqlBase.createConnection(mySqlDriver);
+			   
+			   // deleting the temporary table if it exists
+			   mySqlBase.deleteTableIfExists(conn, tableName);
+			   // creating a new temporary table
+			   mySqlBase.createNewTableIfNoExists(conn, tableName);
+			   // writing prepared random data to the table
+			   mySqlBase.addPlistToBaseTable (conn, expected_entries, tableName);
+			   // place to receive data from the table
+			   mySqlBase.addPlistToBaseTable (conn, expected_entries, tableName);
+
+		   } 
+		   catch (Exception e) { 
+			   e.printStackTrace(); 
+		   } 
+
+	   }
 
 }
