@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 
 public class TestMySqlBase {
@@ -60,6 +61,7 @@ public class TestMySqlBase {
 	   	   
 	   // Testing createConnection(String driver) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testCreateConnection() throws Exception {
 		   
 		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
@@ -72,6 +74,7 @@ public class TestMySqlBase {
 	   
 	   // Testing closeConnection(Connection connection) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testCloseConnection() throws Exception {
 
 		   MySqlBase mySqlBase = new MySqlBase(database_url, user_login, user_password);
@@ -191,6 +194,7 @@ public class TestMySqlBase {
 	   
 	   // Testing addPlistToBaseTable(Connection connection, List<Entry> entries, String tableName) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testAddPlistToBaseTable() throws Exception {
 
 		   String tableName = "temp"; // temporary table name
@@ -360,6 +364,7 @@ public class TestMySqlBase {
 	   
 	   // Testing readDataFromBaseTable(Connection connection, String tableName, String query) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testReadDataFromBase() throws Exception {
 
 		   String tableName = "temp"; // temporary table name

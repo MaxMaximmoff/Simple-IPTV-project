@@ -4,8 +4,10 @@ package com.meMaxMaximmoff.executabe;
  * Created by Max Maximoff on 02/05/2021.
  * Class for working with playlist tables in the PostgreSql database
  */
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.sql.Connection;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 public class TestPostgreSqlBase {
 	
@@ -29,6 +32,7 @@ public class TestPostgreSqlBase {
 
 	   // Testing a constructor using Java Reflection
 	   @Test
+	   @Category({MainTestsCategory.class, ExcludedTestsCategory.class})
 	   public void testParamConstructor() throws Exception {
 
 
@@ -54,6 +58,7 @@ public class TestPostgreSqlBase {
 	   
 	   // Testing createConnection(String driver) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testCreateConnection() throws Exception {
 		   
 		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(pgDbUrl, pgDbLogin, pgDbPass);
@@ -66,6 +71,7 @@ public class TestPostgreSqlBase {
 	   
 	   // Testing closeConnection(Connection connection) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testCloseConnection() throws Exception {
 
 		   PostgreSqlBase postgreSqlBase = new PostgreSqlBase(pgDbUrl, pgDbLogin, pgDbPass);
@@ -186,6 +192,7 @@ public class TestPostgreSqlBase {
 	   
 	   // Testing addPlistToBaseTable(Connection connection, List<Entry> entries, String tableName) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testAddPlistToBaseTable() throws Exception {
 
 		   String tableName = "temp"; // temporary table name
@@ -436,6 +443,7 @@ public class TestPostgreSqlBase {
 	   
 	   // Testing readDataFromBaseTable(Connection connection, String tableName, String query) method
 	   @Test
+	   @Category(MainTestsCategory.class)
 	   public void testReadDataFromBase() throws Exception {
 
 		   String tableName = "temp"; // temporary table name
