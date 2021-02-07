@@ -190,7 +190,7 @@ public class TestSqlQueries {
 			}
 
 			System.out.println();
-			System.out.println(String.format("%-25s %-25s", "Название группы", "Количество каналов"));
+			System.out.println(String.format("%-25s %-25s", "НАЗВАНИЕ ГРУППЫ", "КОЛИЧЕСТВО КАНАЛОВ"));
 			System.out.println();
 
 			for(Entry entry : entries) {
